@@ -1,5 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import ChiefCutout from '../assets/ChiefCutout2.svg';
+---
 
-
-<div class="text-center">
-	<h1 class="font-Display2 text-Primary"> Whereas a common understanding of these rights and freedoms is </h1>
+<div class="w-full min-h-screen flex flex-col items-center justify-center bg-Background2">
+	<div class="flex flex-col items-center">
+		<Image
+			src={ChiefCutout}
+			alt="Chief Cutout"
+			width={500}
+			height={500}
+		/>
+		<h1 class="text-Primary1 font-Display2"> Whereas a common understanding of these rights and freedoms is </h1>
+	</div>
+	<div>
+		<h1> Here comes icons</h1>
+	</div>
+	<div>
+		<h2> Here comes down arrow</h2>
+	</div>
+    
 </div>
