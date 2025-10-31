@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+
+
+    /* Custom Colours */
+    --color-myColour: #1f12b0;
+
+}
