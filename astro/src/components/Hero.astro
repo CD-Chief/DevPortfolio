@@ -1,17 +1,29 @@
 ---
 import { Image } from 'astro:assets';
 import ChiefCutout from '../assets/ChiefCutout2.svg';
+import Triangle from '../assets/Triangle.svg';
 ---
 
-<div class="w-full min-h-screen flex flex-col items-center justify-center bg-Background2">
-	<div class="flex flex-col items-center">
+<div class="w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
+	<!-- triangle absolutely positioned so it can overlap the chief image -->
+	<div class="absolute right-[470px] top-[15px] z-20">
+		<Image 
+			src={Triangle}
+			alt="Triangle"
+			width={130}
+			height={130}
+		/>
+	</div>
+
+	<div class="flex flex-col items-center relative z-10">
 		<Image
 			src={ChiefCutout}
 			alt="Chief Cutout"
 			width={500}
 			height={500}
+			class="block"
 		/>
-		<h1 class="text-Primary1 font-Display2"> Whereas a common understanding of these rights and freedoms is </h1>
+		<h1 class="text-Primary1 font-Display2 mt-6 text-center"> Whereas a common understanding of these rights and freedoms is </h1>
 	</div>
 	<div>
 		<h1> Here comes icons</h1>
