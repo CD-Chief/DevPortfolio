@@ -5,24 +5,28 @@ import Triangle from '../assets/Triangle.svg';
 ---
 
 <div class="w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
-	<!-- triangle absolutely positioned so it can overlap the chief image -->
-	<div class="absolute right-[470px] top-[15px] z-20">
-		<Image 
-			src={Triangle}
-			alt="Triangle"
-			width={130}
-			height={130}
-		/>
-	</div>
-
 	<div class="flex flex-col items-center relative z-10">
-		<Image
-			src={ChiefCutout}
-			alt="Chief Cutout"
-			width={500}
-			height={500}
-			class="block"
-		/>
+		<!-- wrapper sized to the chief image so absolute children position relative to it -->
+		<div class="relative inline-block">
+			<Image
+				src={ChiefCutout}
+				alt="Chief Cutout"
+				width={500}
+				height={500}
+				class="block z-10"
+			/>
+
+			<!-- triangle positioned slightly to the right of the chief image; responsive offsets -->
+			<div class="absolute top-[-80px] right-[-20px] sm:right-[-30px] md:right-[-40px] z-20 pointer-events-none">
+				<Image
+					src={Triangle}
+					alt="Triangle"
+					width={150}
+					height={150}
+				/>
+			</div>
+		</div>
+
 		<h1 class="text-Primary1 font-Display2 mt-6 text-center"> Whereas a common understanding of these rights and freedoms is </h1>
 	</div>
 	<div>
