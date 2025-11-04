@@ -2,6 +2,10 @@
 import { Image } from 'astro:assets';
 import ChiefCutout from '../assets/ChiefCutout2.svg';
 import Triangle from '../assets/Triangle.svg';
+import LinkedInLogo from '../assets/logos/linkedInLogo.svg';
+import GitHubLogo from '../assets/logos/githubLogo.svg';
+import EmailLogo from '../assets/logos/emailLogo.svg';
+import ServerLogo from '../assets/logos/serverLogo.svg';
 ---
 
 <div class="w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
@@ -27,13 +31,63 @@ import Triangle from '../assets/Triangle.svg';
 			</div>
 		</div>
 
-		<h1 class="text-Primary1 font-Display2 mt-6 text-center"> Whereas a common understanding of these rights and freedoms is </h1>
+		<h1 class="text-Neutral-Dark font-Display2 mt-6 text-center text-2xl"> Hello! I'm Chief and welcome to my website! </h1>
+		
+		<!-- Divider line -->
+		<div class="w-48 h-0.5 bg-Neutral-Dark mt-8 mb-8"></div>
+		
+		<!-- Social icons row -->
+		<div class="flex gap-6 items-center">
+			<!-- LinkedIn -->
+			<a href="#" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
+				<Image
+					src={LinkedInLogo}
+					alt="LinkedIn"
+					width={32}
+					height={32}
+				/>
+			</a>
+			
+			<!-- GitHub -->
+			<a href="#" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
+				<Image
+					src={GitHubLogo}
+					alt="GitHub"
+					width={32}
+					height={32}
+				/>
+			</a>
+			
+			<!-- Email -->
+			<a href="mailto:your-email@example.com" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
+				<Image
+					src={EmailLogo}
+					alt="Email"
+					width={32}
+					height={32}
+				/>
+			</a>
+			
+			<!-- Server -->
+			<a href="#" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
+				<Image
+					src={ServerLogo}
+					alt="Server"
+					width={32}
+					height={32}
+				/>
+			</a>
+		</div>
 	</div>
-	<div>
-		<h1> Here comes icons</h1>
-	</div>
-	<div>
-		<h2> Here comes down arrow</h2>
+	
+	<!-- Footer section at bottom of page -->
+	<div class="absolute bottom-8 flex flex-col items-center gap-4">
+		<p class="text-Primary1 font-Display2 text-sm">Hosted locally with love on my raspberry 🍓</p>
+		
+		<!-- Chevron down -->
+		<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-Primary1 animate-bounce">
+			<path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+		</svg>
 	</div>
     
 </div>
