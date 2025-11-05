@@ -1,0 +1,111 @@
+---
+interface Props {
+  name: string;
+  size: 'S' | 'M' | 'L';
+  image?: string;
+  technologies: string[];
+  description: string;
+  showMoreButton?: boolean;
+  link?: string;
+}
+
+const { name, size, image, technologies, description, showMoreButton = false, link = '#' } = Astro.props;
+
+// Size letter colors (lighter shades)
+const sizeColors = {
+  S: 'text-green-200',
+  M: 'text-yellow-200',
+  L: 'text-red-200'
+};
+
+// Technology tag colors - assign colors based on common tech categories
+const getTechColor = (tech: string) => {
+  const techLower = tech.toLowerCase();
+  
+  // Frontend frameworks/libraries
+  if (techLower.includes('react') || techLower.includes('vue') || techLower.includes('angular')) {
+    return 'bg-blue-100 text-blue-700 border-blue-300';
+  }
+  // Styling
+  if (techLower.includes('css') || techLower.includes('tailwind') || techLower.includes('sass')) {
+    return 'bg-pink-100 text-pink-700 border-pink-300';
+  }
+  // Backend
+  if (techLower.includes('node') || techLower.includes('express') || techLower.includes('python')) {
+    return 'bg-green-100 text-green-700 border-green-300';
+  }
+  // Database
+  if (techLower.includes('mongo') || techLower.includes('sql') || techLower.includes('database')) {
+    return 'bg-purple-100 text-purple-700 border-purple-300';
+  }
+  // Astro specific
+  if (techLower.includes('astro')) {
+    return 'bg-orange-100 text-orange-700 border-orange-300';
+  }
+  // TypeScript/JavaScript
+  if (techLower.includes('typescript') || techLower.includes('javascript')) {
+    return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+  }
+  // Default
+  return 'bg-gray-100 text-gray-700 border-gray-300';
+};
+---
+
+<div class="bg-white shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200">
+  <!-- Header with title and size letter -->
+  <div class="flex items-center justify-between p-4">
+    <h3 class="text-xl font-Display1 text-Neutral-Dark flex-1 text-center">{name}</h3>
+    <span class={`text-2xl font-bold ${sizeColors[size]}`}>
+      {size}
+    </span>
+  </div>
+
+  <!-- Main content: Image and Info columns -->
+  <div class={`grid gap-6 p-6 ${image ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+    <!-- Left column: Image (conditional) -->
+    {image && (
+      <div class="flex items-center justify-center">
+        <img 
+          src={image} 
+          alt={name}
+          class="w-full h-48 object-cover rounded-lg"
+        />
+      </div>
+    )}
+
+    <!-- Right column (or center if no image): Technologies and Description -->
+    <div class={`flex flex-col gap-4 ${!image ? 'items-center text-center' : ''}`}>
+      <!-- Technologies -->
+      <div>
+        <h4 class="text-sm font-semibold text-gray-600 mb-2">Technologies</h4>
+        <div class="flex flex-wrap gap-2 justify-center">
+          {technologies.map((tech) => (
+            <span class={`px-3 py-1 rounded-full text-xs font-medium border ${getTechColor(tech)}`}>
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <h4 class="text-sm font-semibold text-gray-600 mb-2">Description</h4>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- See More button (conditional) - Neubrutalist style -->
+  {showMoreButton && (
+    <div class="px-6 pb-6 flex justify-center">
+      <a 
+        href={link}
+        class="inline-block text-Neutral-Dark font-medium text-sm px-4 py-2 relative transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(26,25,49,1)]"
+      >
+        See More →
+      </a>
+    </div>
+  )}
+</div>

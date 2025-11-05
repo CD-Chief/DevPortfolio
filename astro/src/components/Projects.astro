@@ -1,19 +1,43 @@
 ---
-// Projects component
+import ProjectCard from './ProjectCard.astro';
+import projectsData from '../data/projects.json';
+
+// Type assertion for the projects data
+type ProjectSize = 'S' | 'M' | 'L';
+interface Project {
+	id: number;
+	name: string;
+	size: ProjectSize;
+	image: string;
+	technologies: string[];
+	description: string;
+	showMoreButton: boolean;
+	link: string;
+}
+
+const projects = projectsData as Project[];
 ---
 
 <section class="min-h-screen w-full flex items-center justify-center p-4" style="background-color: var(--color-Background1);">
 	<!-- Centered container with curved edges and different background -->
 	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg" style="background-color: var(--color-Background2);">
 		
-		<!-- Projects content goes here -->
-		<div class="flex flex-col items-center">
-			<h2 class="text-4xl font-Display1 mb-8" style="color: var(--color-Neutral-Dark);">Projects</h2>
-			
-			<!-- Placeholder content -->
-			<p class="text-lg font-Display2 text-center" style="color: var(--color-Neutral-Dark);">
-				This is where projects will be displayed.
-			</p>
+		<!-- Projects content -->
+		<h2 class="text-4xl font-Display1 mb-12 text-center" style="color: var(--color-Neutral-Dark);">Projects</h2>
+		
+		<!-- Projects Grid -->
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			{projects.map((project) => (
+				<ProjectCard
+					name={project.name}
+					size={project.size}
+					image={project.image}
+					technologies={project.technologies}
+					description={project.description}
+					showMoreButton={project.showMoreButton}
+					link={project.link}
+				/>
+			))}
 		</div>
 
 	</div>
