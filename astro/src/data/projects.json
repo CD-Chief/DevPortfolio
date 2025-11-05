@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Portfolio Website",
     "size": "M",
-    "image": "/placeholder-project.jpg",
+    "image": "/src/assets/projects/image.png",
     "technologies": ["Astro", "Tailwind CSS", "TypeScript"],
     "description": "A modern portfolio website showcasing my projects and skills with a clean, responsive design.",
     "showMoreButton": true,
