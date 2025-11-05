@@ -32,7 +32,7 @@ import Triangle from '../assets/Triangle.svg';
 		</h1>
 		
 		<!-- Divider line -->
-		<div class="w-75 h-1 bg-Neutral-Dark mt-8 mb-8 rounded-full"></div>
+		<div class="h-1 bg-Neutral-Dark mt-8 mb-8 rounded-full divider-grow"></div>
 		
 		<!-- Social icons row -->
 		<div class="flex gap-12 items-center mb-16">
@@ -110,6 +110,22 @@ import Triangle from '../assets/Triangle.svg';
 	/* Letter-by-letter animation for text */
 	.letter-by-letter {
 		display: inline-block;
+	}
+
+	/* Divider line grow animation */
+	.divider-grow {
+		width: 0;
+		animation: growWidth 0.8s ease-out forwards;
+		animation-delay: 1.5s; /* Start after text finishes */
+	}
+
+	@keyframes growWidth {
+		from {
+			width: 0;
+		}
+		to {
+			width: 300px; /* w-75 equivalent */
+		}
 	}
 </style>
 
