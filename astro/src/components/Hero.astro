@@ -17,7 +17,7 @@ import Triangle from '../assets/Triangle.svg';
 			/>
 
 			<!-- triangle positioned slightly to the right of the chief image; responsive offsets -->
-			<div class="absolute top-[-70px] right-[-20px] sm:right-[-30px] md:right-[-40px] z-20 pointer-events-none">
+			<div class="absolute top-[-70px] right-[-20px] sm:right-[-30px] md:right-[-40px] z-20 pointer-events-none triangle-animate">
 				<Image
 					src={Triangle}
 					alt="Triangle"
@@ -27,7 +27,9 @@ import Triangle from '../assets/Triangle.svg';
 			</div>
 		</div>
 
-		<h1 class="text-Neutral-Dark font-Display2 text-center text-2xl"> Hello! I'm Chief and welcome to my website! </h1>
+		<h1 class="text-Neutral-Dark font-Display2 text-center text-2xl">
+			<span class="letter-by-letter">Hello! I'm Chief and welcome to my website!</span>
+		</h1>
 		
 		<!-- Divider line -->
 		<div class="w-75 h-1 bg-Neutral-Dark mt-8 mb-8 rounded-full"></div>
@@ -85,3 +87,65 @@ import Triangle from '../assets/Triangle.svg';
 	</div>
     
 </div>
+
+<style>
+	/* Triangle animation: slide in from left, fade in, and rotate into position */
+	.triangle-animate {
+		animation: triangleSlide 1.2s ease-out forwards;
+		opacity: 0;
+		transform: translateX(-100px) rotate(-25deg);
+	}
+
+	@keyframes triangleSlide {
+		0% {
+			opacity: 0;
+			transform: translateX(-100px) rotate(-360deg);
+		}
+		100% {
+			opacity: 1;
+			transform: translateX(0) rotate(0deg);
+		}
+	}
+
+	/* Letter-by-letter animation for text */
+	.letter-by-letter {
+		display: inline-block;
+	}
+</style>
+
+<script>
+	// Letter-by-letter animation
+	document.addEventListener('DOMContentLoaded', () => {
+		const textElement = document.querySelector('.letter-by-letter');
+		if (textElement) {
+			const text = textElement.textContent || '';
+			textElement.textContent = '';
+			
+			// Split text into individual characters and wrap each in a span
+			text.split('').forEach((char, index) => {
+				const span = document.createElement('span');
+				span.textContent = char;
+				span.style.opacity = '0';
+				span.style.display = 'inline-block';
+				// Preserve space characters
+				if (char === ' ') {
+					span.style.width = '0.25em';
+				}
+				span.style.animation = `fadeInLetter 0.1s ease-in forwards`;
+				span.style.animationDelay = `${index * 0.03}s`; // 50ms delay between each letter
+				textElement.appendChild(span);
+			});
+		}
+	});
+</script>
+
+<style>
+	@keyframes fadeInLetter {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+</style>
