@@ -1,5 +1,16 @@
 ---
-// Skills component
+import SkillBox from './SkillBox.astro';
+import skillsData from '../data/skills.json';
+
+// Type assertion for skills data
+interface Skill {
+	id: number;
+	name: string;
+	svgPath: string;
+	hoverColor: string;
+}
+
+const skills = skillsData as Skill[];
 ---
 
 <section class="min-h-screen w-full flex flex-col justify-center py-12" style="background-color: var(--color-Background1);">
@@ -11,9 +22,15 @@
 
 	<!-- Container full width, no rounding -->
 	<div class="w-full h-auto min-h-[70vh] shadow-lg p-12" style="background-color: var(--color-Background2);">
-		<!-- Skills content goes here -->
-		<p class="text-lg font-Display2 text-center" style="color: var(--color-Neutral-Dark);">
-			Skills content coming soon...
-		</p>
+		<!-- Skills grid -->
+		<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+			{skills.map((skill) => (
+				<SkillBox
+					svgPath={skill.svgPath}
+					name={skill.name}
+					hoverColor={skill.hoverColor}
+				/>
+			))}
+		</div>
 	</div>
 </section>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "React",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    "hoverColor": "#61DAFB"
+  },
+  {
+    "id": 2,
+    "name": "TypeScript",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    "hoverColor": "#3178C6"
+  },
+  {
+    "id": 3,
+    "name": "JavaScript",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+    "hoverColor": "#F7DF1E"
+  },
+  {
+    "id": 4,
+    "name": "Python",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+    "hoverColor": "#3776AB"
+  },
+  {
+    "id": 5,
+    "name": "Node.js",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+    "hoverColor": "#339933"
+  },
+  {
+    "id": 6,
+    "name": "Tailwind CSS",
+    "svgPath": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+    "hoverColor": "#06B6D4"
+  }
+]

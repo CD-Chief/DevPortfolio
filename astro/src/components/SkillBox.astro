@@ -1,0 +1,81 @@
+---
+interface Props {
+  svgPath: string;
+  name: string;
+  hoverColor: string;
+}
+
+const { svgPath, name, hoverColor } = Astro.props;
+---
+
+<div class="skill-box group">
+  <div class="skill-icon-container">
+    <img 
+      src={svgPath} 
+      alt={name}
+      class="skill-icon"
+    />
+  </div>
+  <p class="skill-name">{name}</p>
+</div>
+
+<style define:vars={{ hoverColor }}>
+  .skill-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: white;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 120px;
+    min-height: 120px;
+  }
+
+  .skill-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  }
+
+  .skill-icon-container {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .skill-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Desaturated and tinted blue, but colors still visible */
+    filter: saturate(30%) brightness(0.8) hue-rotate(180deg);
+    transition: filter 0.3s ease;
+  }
+
+  .skill-box:hover .skill-icon {
+    /* Remove filter on hover to show original colors */
+    filter: none;
+  }
+
+  .skill-name {
+    font-family: var(--font-Display2);
+    font-size: 0.875rem;
+    color: var(--color-Neutral-Dark);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .skill-box:hover .skill-name {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
