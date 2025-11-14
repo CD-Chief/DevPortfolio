@@ -20,12 +20,12 @@ const projects = projectsData as Project[];
 const displayedProjects = projects.filter(project => project.id >= 1 && project.id <= 4);
 ---
 
-<section class="min-h-screen w-full flex items-center justify-center p-4" style="background-color: var(--color-Background1);">
+<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
 	<!-- Centered container with curved edges and different background -->
-	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg" style="background-color: var(--color-Background2);">
+	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg bg-Background2">
 		
 		<!-- Projects content -->
-		<h2 class="text-4xl font-Display1 mb-12 text-center" style="color: var(--color-Neutral-Dark);">Projects</h2>
+		<h2 class="text-4xl font-Display1 mb-12 text-center text-Neutral-Dark">Projects</h2>
 		
 		<!-- Projects Grid -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -46,8 +46,7 @@ const displayedProjects = projects.filter(project => project.id >= 1 && project.
 		<div class="flex justify-center">
 			<a 
 				href="/projects" 
-				class="more-projects-btn px-8 py-3 rounded-lg font-Display2 font-medium text-lg transition-all duration-300"
-				style="background-color: var(--color-Neutral-Dark); color: white;"
+				class="px-8 py-3 rounded-lg font-Display2 font-medium text-lg transition-all duration-300 bg-Neutral-Dark text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
 			>
 				More Projects
 			</a>
@@ -55,11 +54,3 @@ const displayedProjects = projects.filter(project => project.id >= 1 && project.
 
 	</div>
 </section>
-
-<style>
-	.more-projects-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
-		opacity: 0.9;
-	}
-</style>

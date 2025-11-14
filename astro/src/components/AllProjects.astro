@@ -18,20 +18,19 @@ interface Project {
 const projects = projectsData as Project[];
 ---
 
-<section class="min-h-screen w-full flex items-center justify-center p-4" style="background-color: var(--color-Background1);">
+<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
 	<!-- Centered container with curved edges and different background -->
-	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg" style="background-color: var(--color-Background2);">
+	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg bg-Background2">
 		
 		<!-- Header with back button -->
 		<div class="flex items-center justify-between mb-8">
 			<a 
 				href="/" 
-				class="back-btn px-6 py-2 rounded-lg font-Display2 font-medium transition-all duration-300"
-				style="background-color: var(--color-Neutral-Dark); color: white;"
+				class="px-6 py-2 rounded-lg font-Display2 font-medium transition-all duration-300 bg-Neutral-Dark text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
 			>
 				Home
 			</a>
-			<h2 class="text-4xl font-Display1 text-center flex-1" style="color: var(--color-Neutral-Dark);">All Projects</h2>
+			<h2 class="text-4xl font-Display1 text-center flex-1 text-Neutral-Dark">All Projects</h2>
 			<div class="w-[100px]"></div> <!-- Spacer for centering -->
 		</div>
 
@@ -41,8 +40,7 @@ const projects = projectsData as Project[];
 				type="text" 
 				id="techFilter"
 				placeholder="Filter by technology (e.g., React, Python)..."
-				class="filter-input px-6 py-3 rounded-lg font-Display2 w-full max-w-md border-2 transition-all duration-300"
-				style="border-color: var(--color-Neutral-Dark); color: var(--color-Neutral-Dark);"
+				class="filter-input px-6 py-3 rounded-lg font-Display2 w-full max-w-md border-2 border-Neutral-Dark text-Neutral-Dark transition-all duration-300"
 			/>
 		</div>
 		
@@ -67,12 +65,6 @@ const projects = projectsData as Project[];
 </section>
 
 <style>
-	.back-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
-		opacity: 0.9;
-	}
-
 	.filter-input {
 		outline: none;
 		background-color: white;

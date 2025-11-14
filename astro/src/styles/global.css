@@ -16,3 +16,8 @@
     --color-Background2: #daebfc;
     --color-Neutral-Dark: #1a1931;
 }
+
+/* Always show scrollbar to prevent layout shifts */
+html {
+    overflow-y: scroll;
+}
