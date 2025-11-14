@@ -3,108 +3,96 @@
     {
       "id": 1,
       "name": "HTML5",
-      "svgPath": "/src/assets/skills/html-5-svgrepo-com.svg",
-      "hoverColor": "#E34F26"
+      "svgPath": "/src/assets/skills/html-5-svgrepo-com.svg"
     },
     {
       "id": 2,
       "name": "CSS3",
-      "svgPath": "/src/assets/skills/css-3-svgrepo-com.svg",
-      "hoverColor": "#1572B6"
+      "svgPath": "/src/assets/skills/css-3-svgrepo-com.svg"
     },
     {
       "id": 3,
       "name": "JavaScript",
-      "svgPath": "/src/assets/skills/javascript-svgrepo-com.svg",
-      "hoverColor": "#F7DF1E"
+      "svgPath": "/src/assets/skills/javascript-svgrepo-com.svg"
     },
     {
       "id": 4,
       "name": "TypeScript",
-      "svgPath": "/src/assets/skills/typescript-official-svgrepo-com.svg",
-      "hoverColor": "#3178C6"
+      "svgPath": "/src/assets/skills/typescript-official-svgrepo-com.svg"
     },
     {
       "id": 5,
       "name": "React",
-      "svgPath": "/src/assets/skills/react-svgrepo-com.svg",
-      "hoverColor": "#61DAFB"
+      "svgPath": "/src/assets/skills/react-svgrepo-com.svg"
     },
     {
       "id": 6,
       "name": "Next.js",
-      "svgPath": "/src/assets/skills/nextjs-fill-svgrepo-com.svg",
-      "hoverColor": "#000000"
+      "svgPath": "/src/assets/skills/nextjs-fill-svgrepo-com.svg"
     },
     {
       "id": 7,
       "name": "Tailwind CSS",
-      "svgPath": "/src/assets/skills/tailwind-svgrepo-com.svg",
-      "hoverColor": "#06B6D4"
+      "svgPath": "/src/assets/skills/tailwind-svgrepo-com.svg"
     },
     {
       "id": 8,
       "name": "Figma",
-      "svgPath": "/src/assets/skills/figma-svgrepo-com.svg",
-      "hoverColor": "#F24E1E"
+      "svgPath": "/src/assets/skills/figma-svgrepo-com.svg"
     }
   ],
   "Backend / Database": [
     {
       "id": 9,
       "name": "Python",
-      "svgPath": "/src/assets/skills/python-svgrepo-com.svg",
-      "hoverColor": "#3776AB"
+      "svgPath": "/src/assets/skills/python-svgrepo-com.svg"
     },
     {
       "id": 10,
       "name": "Flask",
-      "svgPath": "/src/assets/skills/flask-svgrepo-com.svg",
-      "hoverColor": "#000000"
+      "svgPath": "/src/assets/skills/flask-svgrepo-com.svg"
     },
     {
       "id": 11,
       "name": "Java",
-      "svgPath": "/src/assets/skills/java-svgrepo-com.svg",
-      "hoverColor": "#007396"
+      "svgPath": "/src/assets/skills/java-svgrepo-com.svg"
     },
     {
       "id": 12,
       "name": "Go",
-      "svgPath": "/src/assets/skills/go-svgrepo-com.svg",
-      "hoverColor": "#00ADD8"
+      "svgPath": "/src/assets/skills/go-svgrepo-com.svg"
     },
     {
       "id": 13,
       "name": "PostgreSQL",
-      "svgPath": "/src/assets/skills/64px-Postgresql_elephant.svg.png",
-      "hoverColor": "#4169E1"
+      "svgPath": "/src/assets/skills/64px-Postgresql_elephant.svg.png"
     },
     {
       "id": 14,
       "name": "MongoDB",
-      "svgPath": "/src/assets/skills/mongodb-svgrepo-com.svg",
-      "hoverColor": "#47A248"
+      "svgPath": "/src/assets/skills/mongodb-svgrepo-com.svg"
     },
     {
       "id": 15,
       "name": "MySQL",
-      "svgPath": "/src/assets/skills/mysql-logo-svgrepo-com.svg",
-      "hoverColor": "#4479A1"
+      "svgPath": "/src/assets/skills/mysql-logo-svgrepo-com.svg"
+    },
+    {
+      "id": 16,
+      "name": "C",
+      "svgPath": "/src/assets/skills/c-1.svg"
     }
   ],
   "DevOps / Tools": [
     {
       "id": 16,
       "name": "Docker",
-      "svgPath": "/src/assets/skills/docker-svgrepo-com.svg",
-      "hoverColor": "#2496ED"
+      "svgPath": "/src/assets/skills/docker-svgrepo-com.svg"
     },
     {
       "id": 17,
       "name": "Git",
-      "svgPath": "/src/assets/skills/git-svgrepo-com.svg",
-      "hoverColor": "#F05032"
+      "svgPath": "/src/assets/skills/git-svgrepo-com.svg"
     }
   ]
 }
