@@ -7,7 +7,6 @@ interface Skill {
 	id: number;
 	name: string;
 	svgPath: string;
-	hoverColor: string;
 }
 
 interface SkillsData {
@@ -36,12 +35,11 @@ const categories = Object.keys(skills);
 					</h3>
 					
 					<!-- Skills grid for this category -->
-					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
 						{skills[category].map((skill) => (
 							<SkillBox
 								svgPath={skill.svgPath}
 								name={skill.name}
-								hoverColor={skill.hoverColor}
 							/>
 						))}
 					</div>
@@ -50,3 +48,34 @@ const categories = Object.keys(skills);
 		</div>
 	</div>
 </section>
+
+<script>
+	// Hotspot bar configuration: 40-60% of viewport height
+	const HOTSPOT_TOP = 0.3;
+	const HOTSPOT_BOTTOM = 0.8;
+
+	function updateSkillBoxes() {
+		const viewportHeight = window.innerHeight;
+		const hotspotTop = viewportHeight * HOTSPOT_TOP;
+		const hotspotBottom = viewportHeight * HOTSPOT_BOTTOM;
+
+		const skillBoxes = document.querySelectorAll('[data-skill]');
+
+		skillBoxes.forEach((box) => {
+			const rect = box.getBoundingClientRect();
+			const boxCenter = rect.top + rect.height / 2;
+
+			// Check if box center is within the hotspot bar
+			if (boxCenter >= hotspotTop && boxCenter <= hotspotBottom) {
+				box.classList.add('active');
+			} else {
+				box.classList.remove('active');
+			}
+		});
+	}
+
+	// Run on load and scroll
+	document.addEventListener('DOMContentLoaded', updateSkillBoxes);
+	window.addEventListener('scroll', updateSkillBoxes);
+	window.addEventListener('resize', updateSkillBoxes);
+</script>

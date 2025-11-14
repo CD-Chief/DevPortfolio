@@ -2,13 +2,12 @@
 interface Props {
   svgPath: string;
   name: string;
-  hoverColor: string;
 }
 
-const { svgPath, name, hoverColor } = Astro.props;
+const { svgPath, name } = Astro.props;
 ---
 
-<div class="skill-box group">
+<div class="skill-box group" data-skill>
   <div class="skill-icon-container">
     <img 
       src={svgPath} 
@@ -19,7 +18,7 @@ const { svgPath, name, hoverColor } = Astro.props;
   <p class="skill-name">{name}</p>
 </div>
 
-<style define:vars={{ hoverColor }}>
+<style>
   .skill-box {
     display: flex;
     flex-direction: column;
@@ -36,7 +35,8 @@ const { svgPath, name, hoverColor } = Astro.props;
     min-height: 120px;
   }
 
-  .skill-box:hover {
+  .skill-box:hover,
+  .skill-box.active {
     transform: translateY(-4px);
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   }
@@ -58,8 +58,9 @@ const { svgPath, name, hoverColor } = Astro.props;
     transition: filter 0.3s ease;
   }
 
-  .skill-box:hover .skill-icon {
-    /* Remove filter on hover to show original colors */
+  .skill-box:hover .skill-icon,
+  .skill-box.active .skill-icon {
+    /* Remove filter on hover/active to show original colors */
     filter: none;
   }
 
@@ -74,7 +75,8 @@ const { svgPath, name, hoverColor } = Astro.props;
     font-weight: 500;
   }
 
-  .skill-box:hover .skill-name {
+  .skill-box:hover .skill-name,
+  .skill-box.active .skill-name {
     opacity: 1;
     transform: translateY(0);
   }
