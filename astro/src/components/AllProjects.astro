@@ -1,21 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
-import projectsData from '../data/projects.json';
+import ProjectModal from './ProjectModal.astro';
 
-// Type assertion for the projects data
-type ProjectSize = 'S' | 'M' | 'L';
-interface Project {
-	id: number;
-	name: string;
-	size: ProjectSize;
-	image?: string;
-	technologies: string[];
-	description: string;
-	showMoreButton: boolean;
-	link: string;
-}
+// Get all projects from content collection
+const allProjects = await getCollection('projects');
 
-const projects = projectsData as Project[];
+// Sort by id
+const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
 ---
 
 <section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
@@ -47,15 +39,16 @@ const projects = projectsData as Project[];
 		<!-- Projects Grid -->
 		<div id="projectsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 			{projects.map((project) => (
-				<div class="project-card" data-technologies={project.technologies.join(', ')}>
+				<div class="project-card" data-technologies={project.data.tech.join(', ')}>
 					<ProjectCard
-						name={project.name}
-						size={project.size}
-						image={project.image}
-						technologies={project.technologies}
-						description={project.description}
-						showMoreButton={project.showMoreButton}
-						link={project.link}
+						name={project.data.title}
+						size={project.data.size}
+						image={project.data.image}
+						technologies={project.data.tech}
+						description={project.data.summary}
+						showMoreButton={project.data.showMoreButton}
+						link={project.data.link}
+						projectId={project.data.id}
 					/>
 				</div>
 			))}
@@ -63,6 +56,9 @@ const projects = projectsData as Project[];
 
 	</div>
 </section>
+
+<!-- Modal for project details -->
+<ProjectModal projects={allProjects} />
 
 <style>
 	.filter-input {

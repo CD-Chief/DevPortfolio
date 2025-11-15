@@ -1,0 +1,159 @@
+---
+interface Props {
+  projects: any[];
+}
+
+const { projects } = Astro.props;
+---
+
+<!-- Modal container (hidden by default) -->
+<div id="projectModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <!-- Backdrop -->
+  <div id="modalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  
+  <!-- Modal content -->
+  <div id="modalContent" class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden z-10 flex flex-col">
+    <!-- Header -->
+    <div class="shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+      <h2 id="modalTitle" class="text-2xl font-Display1 text-Neutral-Dark"></h2>
+      <button 
+        type="button"
+        id="closeModal"
+        class="text-gray-500 hover:text-Neutral-Dark transition-colors p-2 rounded-lg hover:bg-gray-100"
+        aria-label="Close modal"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body with scroll - contains all pre-rendered project content -->
+    <div id="modalBody" class="overflow-y-auto p-6 flex-1">
+      {projects.map(async (project) => {
+        const { Content } = await project.render();
+        return (
+          <div 
+            class="project-content hidden prose prose-lg max-w-none" 
+            data-project-id={project.data.id}
+          >
+            <Content />
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Show modal */
+  #projectModal.show {
+    display: flex;
+  }
+
+  /* Prevent body scroll when modal is open */
+  body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Show active project content */
+  .project-content.active {
+    display: block;
+  }
+</style>
+
+<script>
+  const modal = document.getElementById('projectModal');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const closeButton = document.getElementById('closeModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+
+  // Open modal function
+  window.openProjectModal = function(projectId, projectTitle) {
+    if (!modal || !modalBody || !modalTitle) return;
+    
+    // Hide all project content
+    const allContent = modalBody.querySelectorAll('.project-content');
+    allContent.forEach(content => content.classList.remove('active'));
+
+    // Show the selected project content
+    const selectedContent = modalBody.querySelector(`[data-project-id="${projectId}"]`);
+    if (selectedContent) {
+      selectedContent.classList.add('active');
+    }
+
+    // Set title
+    modalTitle.textContent = projectTitle;
+
+    // Reset scroll position
+    modalBody.scrollTop = 0;
+
+    // Save current scroll position before locking body
+    const scrollY = window.scrollY;
+    
+    // Show modal
+    modal.classList.add('show');
+    
+    // Lock body scroll and maintain scroll position
+    document.body.style.top = `-${scrollY}px`;
+    document.body.classList.add('modal-open');
+  };
+
+  // Close modal function
+  function closeModal() {
+    modal.classList.remove('show');
+    
+    // Get the scroll position from body top
+    const scrollY = document.body.style.top;
+    document.body.classList.remove('modal-open');
+    document.body.style.top = '';
+    
+    // Restore scroll position
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+  }
+
+  // Close button click
+  closeButton?.addEventListener('click', closeModal);
+
+  // Backdrop click (click outside)
+  modalBackdrop?.addEventListener('click', closeModal);
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('show')) {
+      closeModal();
+    }
+  });
+
+  // Prevent modal content clicks from closing
+  document.getElementById('modalContent')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // Add event listeners to all modal trigger buttons
+  document.addEventListener('DOMContentLoaded', () => {
+    const triggerButtons = document.querySelectorAll('.project-modal-trigger');
+    
+    triggerButtons.forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const projectId = button.getAttribute('data-project-id');
+        const projectTitle = button.getAttribute('data-project-title');
+        
+        if (projectId && projectTitle) {
+          window.openProjectModal(Number(projectId), projectTitle);
+        }
+        
+        return false;
+      });
+    });
+  });
+</script>
