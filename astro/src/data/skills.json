@@ -93,6 +93,11 @@
       "id": 17,
       "name": "Git",
       "svgPath": "/src/assets/skills/git-svgrepo-com.svg"
+    },
+    {
+      "id": 18,
+      "name": "Azure",
+      "svgPath": "/src/assets/skills/azure-icon-svgrepo-com.svg"
     }
   ]
 }

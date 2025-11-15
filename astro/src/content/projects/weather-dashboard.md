@@ -5,7 +5,7 @@ size: "S"
 tech: ["JavaScript", "API Integration", "Chart.js"]
 summary: "Simple weather dashboard that displays current conditions and forecasts for multiple cities."
 link: "#"
-showMoreButton: true
+showMoreButton: false
 ---
 
 # Weather Dashboard
