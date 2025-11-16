@@ -6,6 +6,10 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   vite: {
+    server: {
+      allowedHosts: ['chiefosei.dev']
+    },
     plugins: [tailwindcss()]
   }
 });
+
