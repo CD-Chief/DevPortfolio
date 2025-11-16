@@ -3,9 +3,9 @@ id: 1
 title: "Portfolio Website"
 size: "M"
 tech: ["Astro", "Tailwind CSS", "TypeScript"]
-image: "/src/assets/projects/image.png"
-summary: "A modern portfolio website showcasing my projects and skills with a clean, responsive design."
+summary: "A modern, responsive portfolio website showcasing my skills and projects."
 link: "#"
+image: "/projects/image.png"
 showMoreButton: true
 ---
 

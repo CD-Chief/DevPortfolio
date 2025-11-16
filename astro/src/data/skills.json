@@ -3,101 +3,101 @@
     {
       "id": 1,
       "name": "HTML5",
-      "svgPath": "/src/assets/skills/html-5-svgrepo-com.svg"
+      "svgPath": "/skills/html-5-svgrepo-com.svg"
     },
     {
       "id": 2,
       "name": "CSS3",
-      "svgPath": "/src/assets/skills/css-3-svgrepo-com.svg"
+      "svgPath": "/skills/css-3-svgrepo-com.svg"
     },
     {
       "id": 3,
       "name": "JavaScript",
-      "svgPath": "/src/assets/skills/javascript-svgrepo-com.svg"
+      "svgPath": "/skills/javascript-svgrepo-com.svg"
     },
     {
       "id": 4,
       "name": "TypeScript",
-      "svgPath": "/src/assets/skills/typescript-official-svgrepo-com.svg"
+      "svgPath": "/skills/typescript-official-svgrepo-com.svg"
     },
     {
       "id": 5,
       "name": "React",
-      "svgPath": "/src/assets/skills/react-svgrepo-com.svg"
+      "svgPath": "/skills/react-svgrepo-com.svg"
     },
     {
       "id": 6,
       "name": "Next.js",
-      "svgPath": "/src/assets/skills/nextjs-fill-svgrepo-com.svg"
+      "svgPath": "/skills/nextjs-fill-svgrepo-com.svg"
     },
     {
       "id": 7,
       "name": "Tailwind CSS",
-      "svgPath": "/src/assets/skills/tailwind-svgrepo-com.svg"
+      "svgPath": "/skills/tailwind-svgrepo-com.svg"
     },
     {
       "id": 8,
       "name": "Figma",
-      "svgPath": "/src/assets/skills/figma-svgrepo-com.svg"
+      "svgPath": "/skills/figma-svgrepo-com.svg"
     }
   ],
   "Backend / Database": [
     {
       "id": 9,
       "name": "Python",
-      "svgPath": "/src/assets/skills/python-svgrepo-com.svg"
+      "svgPath": "/skills/python-svgrepo-com.svg"
     },
     {
       "id": 10,
       "name": "Flask",
-      "svgPath": "/src/assets/skills/flask-svgrepo-com.svg"
+      "svgPath": "/skills/flask-svgrepo-com.svg"
     },
     {
       "id": 11,
       "name": "Java",
-      "svgPath": "/src/assets/skills/java-svgrepo-com.svg"
+      "svgPath": "/skills/java-svgrepo-com.svg"
     },
     {
       "id": 12,
       "name": "Go",
-      "svgPath": "/src/assets/skills/go-svgrepo-com.svg"
+      "svgPath": "/skills/go-svgrepo-com.svg"
     },
     {
       "id": 13,
       "name": "PostgreSQL",
-      "svgPath": "/src/assets/skills/64px-Postgresql_elephant.svg.png"
+      "svgPath": "/skills/64px-Postgresql_elephant.svg.png"
     },
     {
       "id": 14,
       "name": "MongoDB",
-      "svgPath": "/src/assets/skills/mongodb-svgrepo-com.svg"
+      "svgPath": "/skills/mongodb-svgrepo-com.svg"
     },
     {
       "id": 15,
       "name": "MySQL",
-      "svgPath": "/src/assets/skills/mysql-logo-svgrepo-com.svg"
+      "svgPath": "/skills/mysql-logo-svgrepo-com.svg"
     },
     {
       "id": 16,
       "name": "C",
-      "svgPath": "/src/assets/skills/c-1.svg"
+      "svgPath": "/skills/c-1.svg"
     }
   ],
   "DevOps / Tools": [
     {
       "id": 16,
       "name": "Docker",
-      "svgPath": "/src/assets/skills/docker-svgrepo-com.svg"
+      "svgPath": "/skills/docker-svgrepo-com.svg"
     },
     {
       "id": 17,
       "name": "Git",
-      "svgPath": "/src/assets/skills/git-svgrepo-com.svg"
+      "svgPath": "/skills/git-svgrepo-com.svg"
     },
     {
       "id": 18,
       "name": "Azure",
-      "svgPath": "/src/assets/skills/azure-icon-svgrepo-com.svg"
+      "svgPath": "/skills/azure-icon-svgrepo-com.svg"
     }
   ]
 }

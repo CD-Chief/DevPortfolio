@@ -12,7 +12,7 @@ showMoreButton: false
 
 A clean and intuitive weather dashboard that provides real-time weather information and forecasts for any location worldwide.
 
-![Weather Dashboard Screenshot](/src/assets/projects/image.png)
+![Weather Dashboard Screenshot](/projects/image.png)
 
 ## Project Overview
 
