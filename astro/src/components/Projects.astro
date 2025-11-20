@@ -14,7 +14,7 @@ const displayedProjects = allProjects
 
 <section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
 	<!-- Centered container with curved edges and different background -->
-	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-12 shadow-lg bg-Background2">
+	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
 		
 		<!-- Projects content -->
 		<a href="/projects" class="block mb-12">
@@ -22,7 +22,7 @@ const displayedProjects = allProjects
 		</a>
 		
 		<!-- Projects Grid -->
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 w-full">
 			{displayedProjects.map((project) => (
 				<ProjectCard
 					name={project.data.title}
