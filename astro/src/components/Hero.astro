@@ -89,6 +89,11 @@ import Triangle from '../assets/Triangle.svg';
 </div>
 
 <style>
+	/* Prevent horizontal overflow from animated triangle */
+	.w-full {
+		overflow-x: hidden;
+	}
+
 	/* Triangle animation: slide in from left, fade in, and rotate into position */
 	.triangle-animate {
 		animation: triangleSlide 1.2s ease-out forwards;
