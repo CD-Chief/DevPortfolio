@@ -135,26 +135,34 @@ import Triangle from '../assets/Triangle.svg';
 </style>
 
 <script>
-	// Letter-by-letter animation
+	// Letter-by-letter animation with word grouping
 	document.addEventListener('DOMContentLoaded', () => {
 		const textElement = document.querySelector('.letter-by-letter');
 		if (textElement) {
 			const text = textElement.textContent || '';
 			textElement.textContent = '';
 			
-			// Split text into individual characters and wrap each in a span
-			text.split('').forEach((char, index) => {
-				const span = document.createElement('span');
-				span.textContent = char;
-				span.style.opacity = '0';
-				span.style.display = 'inline-block';
-				// Preserve space characters
-				if (char === ' ') {
-					span.style.width = '0.25em';
-				}
-				span.style.animation = `fadeInLetter 0.1s ease-in forwards`;
-				span.style.animationDelay = `${index * 0.03}s`; // 50ms delay between each letter
-				textElement.appendChild(span);
+			let totalLetterIndex = 0;
+			
+			// Split text into words
+			text.split(' ').forEach((word, wIndex, arr) => {
+				const wordSpan = document.createElement('span');
+				wordSpan.style.display = 'inline-block';
+				wordSpan.style.marginRight = '0.25em'; // Add space between words
+				
+				// Now split each word into letters
+				word.split('').forEach((char) => {
+					const span = document.createElement('span');
+					span.textContent = char;
+					span.style.opacity = '0';
+					span.style.display = 'inline';
+					span.style.animation = `fadeInLetter 0.1s ease-in forwards`;
+					span.style.animationDelay = `${totalLetterIndex * 0.03}s`;
+					wordSpan.appendChild(span);
+					totalLetterIndex++;
+				});
+				
+				textElement.appendChild(wordSpan);
 			});
 		}
 	});
