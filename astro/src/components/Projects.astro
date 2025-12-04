@@ -39,23 +39,23 @@ const mobileProjects = sortedProjects.filter(project => project.data.id >= 1 && 
 			))}
 		</div>
 
-		<!-- Projects Grid - Desktop (4 projects) -->
-		<div class="hidden lg:grid grid-cols-2 gap-8 mb-12 w-full">
-			{displayedProjects.map((project) => (
-				<ProjectCard
-					name={project.data.title}
-					size={project.data.size}
-					image={project.data.image}
-					technologies={project.data.tech}
-					description={project.data.summary}
-					showMoreButton={project.data.showMoreButton}
-					link={project.data.link}
-					projectId={project.data.id}
-				/>
-			))}
-		</div>
-
-		<!-- More Projects Button -->
+	   <!-- Projects Masonry - Desktop (4 projects) -->
+	   <div class="hidden lg:block mb-12 w-full columns-2 gap-8">
+		   {displayedProjects.map((project) => (
+			   <div class="mb-8 break-inside-avoid">
+				   <ProjectCard
+					   name={project.data.title}
+					   size={project.data.size}
+					   image={project.data.image}
+					   technologies={project.data.tech}
+					   description={project.data.summary}
+					   showMoreButton={project.data.showMoreButton}
+					   link={project.data.link}
+					   projectId={project.data.id}
+				   />
+			   </div>
+		   ))}
+	   </div>		<!-- More Projects Button -->
 		<div class="flex justify-center">
 			<a 
 				href="/projects" 
