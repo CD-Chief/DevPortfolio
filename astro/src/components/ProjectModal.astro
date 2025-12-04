@@ -73,6 +73,7 @@ const { projects } = Astro.props;
   const modalBody = document.getElementById('modalBody');
 
   // Open modal function
+  // @ts-ignore
   window.openProjectModal = function(projectId, projectTitle) {
     if (!modal || !modalBody || !modalTitle) return;
     
