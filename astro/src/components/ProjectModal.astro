@@ -90,8 +90,12 @@ const { projects } = Astro.props;
     // Set title
     modalTitle.textContent = projectTitle;
 
-    // Reset scroll position
-    modalBody.scrollTop = 0;
+    // Reset scroll position on both scrollable containers after DOM update
+    window.requestAnimationFrame(() => {
+      const modalContent = document.getElementById('modalContent');
+      if (modalContent) modalContent.scrollTop = 0;
+      if (modalBody) modalBody.scrollTop = 0;
+    });
 
     // Save current scroll position before locking body
     const scrollY = window.scrollY;
