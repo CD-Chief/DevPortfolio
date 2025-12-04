@@ -6,10 +6,12 @@ import ProjectModal from './ProjectModal.astro';
 // Get all projects from content collection
 const allProjects = await getCollection('projects');
 
-// Sort by id and filter to only show projects with id 1-4
-const displayedProjects = allProjects
-	.sort((a, b) => a.data.id - b.data.id)
-	.filter(project => project.data.id >= 1 && project.data.id <= 4);
+// Sort by id
+const sortedProjects = allProjects.sort((a, b) => a.data.id - b.data.id);
+
+// Show first 2 projects on mobile, first 4 on desktop
+const displayedProjects = sortedProjects.filter(project => project.data.id >= 1 && project.data.id <= 4);
+const mobileProjects = sortedProjects.filter(project => project.data.id >= 1 && project.data.id <= 2);
 ---
 
 <section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
@@ -21,8 +23,24 @@ const displayedProjects = allProjects
 			<h2 class="text-4xl font-Display1 text-center text-Neutral-Dark transition-all duration-300 hover:text-Primary1 hover:scale-105 cursor-pointer">Projects</h2>
 		</a>
 		
-		<!-- Projects Grid -->
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 w-full">
+		<!-- Projects Grid - Mobile (2 projects) -->
+		<div class="grid grid-cols-1 gap-8 mb-12 w-full lg:hidden">
+			{mobileProjects.map((project) => (
+				<ProjectCard
+					name={project.data.title}
+					size={project.data.size}
+					image={project.data.image}
+					technologies={project.data.tech}
+					description={project.data.summary}
+					showMoreButton={project.data.showMoreButton}
+					link={project.data.link}
+					projectId={project.data.id}
+				/>
+			))}
+		</div>
+
+		<!-- Projects Grid - Desktop (4 projects) -->
+		<div class="hidden lg:grid grid-cols-2 gap-8 mb-12 w-full">
 			{displayedProjects.map((project) => (
 				<ProjectCard
 					name={project.data.title}
