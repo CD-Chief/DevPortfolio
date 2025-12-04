@@ -1,11 +1,11 @@
 --- 
-id: 1
-title: "My Portfolio Website"
+id: 3
+title: "This Portfolio Website"
 size: "M"
 tech: ["Astro", "Tailwind CSS", "TypeScript"]
 summary: "A modern, responsive portfolio website showcasing my skills and projects."
 link: "#"
-image: "/projects/Durhack1.png"
+image: "/projects/ThisSite.png"
 showMoreButton: true
 ---
 

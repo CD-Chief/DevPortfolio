@@ -1,46 +1,52 @@
---- 
-id: 2
+---
+id: 1
 title: "Photography Portfolio Website"
 size: "L"
-tech: ["Next.js", "TypeScript", "Tailwind CSS", "WP REST API"]
-summary: "A professional, multilingual photography portfolio site with a headless CMS and GDPR-compliant contact features."
+tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity (Headless CMS)", "Figma"]
+summary: "A multilingual, client-ready photography portfolio with a headless CMS, accessibility-conscious contact flow, and a wireframe-driven design process."
 link: "http://ibejiphotography.com"
-image: "/projects/Ibeji1.png"
+image: "/projects/IbejiGallery.png"
 showMoreButton: true
 ---
 
 # Photography Portfolio Website
 
-From initial sketches and wireframes to over 200 commits refining every detail, this project pushed me to deliver a fully functional, polished portfolio site for a solo photographer.
+A production-ready photography portfolio site for a solo photographer, built with Next.js (App Router), TypeScript, Tailwind CSS, and a headless Sanity CMS backend.
 
-## Project Overview
+## Collaboration & Requirements
 
-Built with Next.js (App Router), TypeScript, and Tailwind CSS, this site features a headless WordPress CMS backend for dynamic content management, multilingual support (English, German, French), and a GDPR-compliant contact form with reCAPTCHA. I collaborated closely with the client throughout the process to gather requirements and translate their vision into detailed Figma wireframes for both desktop and mobile.
+We started with multiple requirements meetings to clarify the client’s goals, audience, and priorities (showcasing work, telling their story, and generating enquiries). For each main page: home, gallery, about, blog, and contact. I created Figma wireframes, iterated on them with the client, and only then moved into implementation so that layout, messaging, and content structure were agreed upfront.
 
-## Key Features
+## Design & UX
 
-- **Multilingual Support**: Locale-aware routing and floating language toggle for seamless switching between English, German, and French.
-- **Performance Optimizations**: Image optimization using Next.js Image component, responsive image loading, and reduced image resolutions for faster site speed.
-- **Dynamic Content**: Integration with WordPress REST API and GraphQL helpers for blog and gallery content management.
-- **Sophisticated UI**: Polished, animated components (carousel CTAs, scroll-aware navbar, parallax effects) enhancing user experience.
-- **Robust Contact Flow**: Rate-limited, spam-protected contact form integrated with email delivery ensuring GDPR compliance.
-- **Masonry Gallery Layout**: Implemented a responsive masonry-style photo gallery using a JavaScript library after extensive experimentation to meet client expectations.
+The design focuses on keeping the photography central, using generous whitespace, restrained colour, and typography that matches the client’s “elegant but approachable” brief. Each wireframe was translated into a responsive layout, with attention to how the experience scales from desktop to mobile while keeping navigation simple and predictable.
 
-## Challenges & Solutions
+## Technical Implementation
 
-Getting the masonry gallery layout right took significant trial and error, requiring a JavaScript library to achieve the desired responsiveness and performance. Additionally, balancing image quality and resolution was crucial — some images were reduced in resolution to improve load times without compromising visual appeal.
+The front end uses Next.js (App Router) with locale-aware routing and translation helpers for multilingual content. A headless Sanity CMS instance powers the blog and gallery, exposing content via its content API so the client can update text and images without touching code. The contact form is wired to a backend handler with spam protection (reCAPTCHA, honeypot, and rate limiting) and email delivery, designed to align with GDPR expectations.
 
-## Technical Highlights
+## Performance & Refinements
 
-- Strong developer tooling with ESLint, reusable components, and clear project documentation.
-- Locale-aware routing and UI components built with next-intl for a smooth bilingual experience.
-- Production-ready server API handlers for form submissions, including rate limiting and anti-spam measures.
-- Optimized CSS animations leveraging GPU acceleration for responsiveness and fluidity.
+High-resolution imagery is handled with Next.js image optimisation, remote patterns, and multiple quality presets to keep the site fast while still showcasing detailed photography. Several images were resized and compressed, and animations were kept lightweight (transform/opacity) to avoid jank while scrolling.
 
-## Impact
+## What I Learned
 
-This project demonstrated a mature blend of design and development skills, effectively translating client needs into a site that balances elegance, usability, and technical performance. It also deepened my expertise in internationalization (i18n), CMS integration, and real-world performance tuning.
+This project strengthened experience in running a full client process end to end: gathering requirements, turning them into wireframes, validating designs, and then delivering a multilingual, CMS-backed site. It also deepened understanding of performance trade-offs when working with large image assets and of how to keep the implementation faithful to a design system across multiple page types.
+
+## Visuals
+
+**Wireframes overview**  
+![Wireframes Overview](/projects/IbejiWireframes.png)
+
+**Gallery / front page**  
+![Front Page](/projects/IbejiFront.png)
+
+**Contact form**  
+![Contact Form](/projects/IbejiContact.png)
+
+**About me page**  
+![About Me Page](/projects/IbejiAbout.png)
 
 ## Links
 
-- Live Site: [ibejiphotography.com](http://ibejiphotography.com)
+- Live site: [ibejiphotography.com](http://ibejiphotography.com)
