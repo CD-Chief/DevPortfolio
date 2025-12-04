@@ -19,35 +19,46 @@ const sizeColors = {
   L: 'text-red-200'
 };
 
-// Technology tag colors - assign colors based on common tech categories
+// Technology tag colors - generalized categories
 const getTechColor = (tech: string) => {
   const techLower = tech.toLowerCase();
   
-  // Frontend frameworks/libraries
-  if (techLower.includes('react') || techLower.includes('vue') || techLower.includes('angular')) {
-    return 'bg-blue-100 text-blue-700 border-blue-300';
-  }
   // Styling
-  if (techLower.includes('css') || techLower.includes('tailwind') || techLower.includes('sass')) {
+  if (techLower.includes('css') || techLower.includes('tailwind') || techLower.includes('sass') || 
+      techLower.includes('figma')) {
     return 'bg-pink-100 text-pink-700 border-pink-300';
   }
+  
   // Backend
-  if (techLower.includes('node') || techLower.includes('express') || techLower.includes('python')) {
+  if (techLower.includes('node') || techLower.includes('express') || techLower.includes('python') || 
+      techLower.includes('flask') || techLower.includes('next') || techLower.includes('sanity')) {
     return 'bg-green-100 text-green-700 border-green-300';
   }
+  
   // Database
   if (techLower.includes('mongo') || techLower.includes('sql') || techLower.includes('database')) {
     return 'bg-purple-100 text-purple-700 border-purple-300';
   }
-  // Astro specific
-  if (techLower.includes('astro')) {
-    return 'bg-orange-100 text-orange-700 border-orange-300';
+  
+  // Hardware
+  if (techLower.includes('raspberry') || techLower.includes('pi')) {
+    return 'bg-red-100 text-red-700 border-red-300';
   }
-  // TypeScript/JavaScript
-  if (techLower.includes('typescript') || techLower.includes('javascript')) {
-    return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+  
+  // AI/ML
+  if (techLower.includes('pytorch') || techLower.includes('mediapipe') || techLower.includes('gemini') || 
+      techLower.includes('api')) {
+    return 'bg-indigo-100 text-indigo-700 border-indigo-300';
   }
-  // Default
+  
+  // Web
+  if (techLower.includes('html') || techLower.includes('javascript') || techLower.includes('typescript') || 
+      techLower.includes('react') || techLower.includes('vue') || techLower.includes('angular') || 
+      techLower.includes('astro')) {
+    return 'bg-blue-100 text-blue-700 border-blue-300';
+  }
+  
+  // Other
   return 'bg-gray-100 text-gray-700 border-gray-300';
 };
 ---
@@ -65,11 +76,11 @@ const getTechColor = (tech: string) => {
   <div class={`grid gap-6 p-6 ${image ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
     <!-- Left column: Image (conditional) -->
     {image && ( 
-      <div class="flex items-center justify-center rounded-4xl">
+      <div class="flex items-center justify-center">
         <img 
           src={image} 
           alt={name}
-          class="w-full h-48 object-contain rounded-4xl"
+          class="w-full h-48 object-contain"
         />
       </div>
     )}
@@ -97,6 +108,20 @@ const getTechColor = (tech: string) => {
       </div>
     </div>
   </div>
+
+  <!-- Project Link (if not #) -->
+  {link && link !== '#' && (
+    <div class="px-6 pb-3 flex justify-center">
+      <a 
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-Primary1 hover:text-Primary2 font-Display2 text-sm underline transition-colors"
+      >
+        View Live Project
+      </a>
+    </div>
+  )}
 
   <!-- See More button (conditional) - Neubrutalist style -->
   {showMoreButton && projectId && (
