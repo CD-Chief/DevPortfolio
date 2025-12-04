@@ -5,7 +5,7 @@ size: "L"
 tech: ["Next.js", "TypeScript", "Tailwind CSS", "WP REST API"]
 summary: "A professional, multilingual photography portfolio site with a headless CMS and GDPR-compliant contact features."
 link: "http://ibejiphotography.com"
-image: "/projects/Ibeji3.png"
+image: "/projects/Ibeji1.png"
 showMoreButton: true
 ---
 
