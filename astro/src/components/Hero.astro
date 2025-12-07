@@ -127,12 +127,15 @@ import Triangle from '../assets/Triangle.svg';
 				if (!res.ok) throw new Error('Request failed');
 				const data = await res.json();
 
+				const cpuTemp = data.cpuTempC !== null ? `${data.cpuTempC.toFixed(1)} °C` : 'N/A';
+				const uptimeHours = Math.round(data.uptimeSeconds / 3600);
+
 				bodyEl.innerHTML = `
-					<p><strong>CPU Temp:</strong> ${data.cpuTemp} °C</p>
-					<p><strong>Load (1m):</strong> ${data.load1}</p>
-					<p><strong>Load (5m):</strong> ${data.load5}</p>
-					<p><strong>RAM:</strong> ${data.memoryUsedMb} / ${data.memoryTotalMb} MB</p>
-					<p><strong>Uptime:</strong> ${Math.round(data.uptimeSeconds / 3600)} hours</p>
+					<p><strong>CPU Temp:</strong> ${cpuTemp}</p>
+					<p><strong>Load (1m):</strong> ${data.load1.toFixed(2)}</p>
+					<p><strong>Load (5m):</strong> ${data.load5.toFixed(2)}</p>
+					<p><strong>RAM:</strong> ${data.memory.usedMb} / ${data.memory.totalMb} MB</p>
+					<p><strong>Uptime:</strong> ${uptimeHours} hours</p>
 				`;
 			} catch (err) {
 				bodyEl.textContent = 'Could not load stats right now.';
