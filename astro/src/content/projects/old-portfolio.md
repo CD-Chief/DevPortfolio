@@ -36,5 +36,5 @@ Styling was the hardest part: there was a lot of trial and error, repeatedly add
 
 ## Visuals
 
-![Old Portfolio Projects Section](/projects/OldPort2.png)
-![About Me Section](/projects/OldPort3.png)
+![Old Portfolio Projects Section](../../assets/projects/OldPort2.png)
+![About Me Section](../../assets/projects/OldPort3.png)

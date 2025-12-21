@@ -36,16 +36,16 @@ This project strengthened experience in running a full client process end to end
 ## Visuals
 
 **Wireframes overview**  
-![Wireframes Overview](/projects/IbejiWireframes.png)
+![Wireframes Overview](../../assets/projects/IbejiWireframes.png)
 
 **Gallery / front page**  
-![Front Page](/projects/IbejiFront.png)
+![Front Page](../../assets/projects/IbejiFront.png)
 
 **Contact form**  
-![Contact Form](/projects/IbejiContact.png)
+![Contact Form](../../assets/projects/IbejiContact.png)
 
 **About me page**  
-![About Me Page](/projects/IbejiAbout.png)
+![About Me Page](../../assets/projects/IbejiAbout.png)
 
 ## Links
 
