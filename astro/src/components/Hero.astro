@@ -14,6 +14,8 @@ import Triangle from '../assets/Triangle.svg';
 				width={500}
 				height={500}
 				class="block z-10"
+				fetchpriority="high"
+				loading="eager"
 			/>
 
 			<!-- triangle positioned slightly to the right of the chief image; responsive offsets -->
@@ -23,6 +25,8 @@ import Triangle from '../assets/Triangle.svg';
 					alt="Triangle"
 					width={150}
 					height={150}
+					loading="lazy"
+    				fetchpriority="low"
 				/>
 			</div>
 		</div>
