@@ -5,7 +5,7 @@ size: "S"
 tech: ["HTML", "CSS", "JavaScript", "React"]
 summary: "A pair of React projects used to learn state management, component structure, and passing data with props and context."
 link: "#"
-image: "/projects/Expense-Tracker.png"
+image: "../../assets/projects/Expense-Tracker.png"
 showMoreButton: true
 ---
 
@@ -47,9 +47,9 @@ Potential next steps include adding edit and delete capabilities to the Expense 
 
 ## Visuals
 
-![Expense Tracker Main View](/projects/Expense-Tracker.png)  
-![Expense Tracker Filter View](/projects/Expense-filtered.png)  
-![Counter App](/projects/counter1.png)
+![Expense Tracker Main View](../../assets/projects/Expense-Tracker.png)  
+![Expense Tracker Filter View](../../assets/projects/Expense-filtered.png)  
+![Counter App](../../assets/projects/counter1.png)
 
 ## Links
 

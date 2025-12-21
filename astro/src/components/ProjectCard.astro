@@ -1,8 +1,11 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
   name: string;
   size: 'S' | 'M' | 'L';
-  image?: string;
+  image?: ImageMetadata;
   technologies: string[];
   description: string;
   showMoreButton?: boolean;
@@ -77,10 +80,13 @@ const getTechColor = (tech: string) => {
     <!-- Left column: Image (conditional) -->
     {image && ( 
       <div class="flex items-center justify-center">
-        <img 
+        <Image 
           src={image} 
           alt={name}
+          width={300}
+          height={192}
           class="w-full h-48 object-contain"
+          loading="lazy"
         />
       </div>
     )}

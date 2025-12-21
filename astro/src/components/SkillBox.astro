@@ -13,6 +13,8 @@ const { svgPath, name } = Astro.props;
       src={svgPath} 
       alt={name}
       class="skill-icon"
+      loading="lazy"
+      decoding="async"
     />
   </div>
   <p class="skill-name">{name}</p>

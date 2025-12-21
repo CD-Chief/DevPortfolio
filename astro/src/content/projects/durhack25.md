@@ -5,7 +5,7 @@ size: "M"
 tech: ["Raspberry Pi", "Python", "Flask", "React", "MediaPipe", "Gemini API"]
 summary: "A gaze-controlled remote camera system using face tracking, a Raspberry Pi servo mount, and AI-generated scene descriptions for accessibility."
 link: "#"
-image: "/projects/Durhack1.png"
+image: "../../assets/projects/Durhack1.png"
 showMoreButton: true
 ---
 
