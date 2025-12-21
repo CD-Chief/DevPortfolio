@@ -5,7 +5,7 @@ size: "S"
 tech: ["HTML", "CSS", "JavaScript", "React"]
 summary: "A pair of React projects used to learn state management, component structure, and passing data with props and context."
 link: "#"
-image: "/projects/Expense-Tracker.png"
+image: "../../assets/projects/Expense-Tracker.png"
 showMoreButton: true
 ---
 

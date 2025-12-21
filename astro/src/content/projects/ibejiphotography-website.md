@@ -5,7 +5,7 @@ size: "L"
 tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity (Headless CMS)", "Figma"]
 summary: "A multilingual, client-ready photography portfolio with a headless CMS, accessibility-conscious contact flow, and a wireframe-driven design process."
 link: "http://ibejiphotography.com"
-image: "/projects/IbejiGallery.png"
+image: "../../assets/projects/IbejiGallery.png"
 showMoreButton: true
 ---
 

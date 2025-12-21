@@ -5,7 +5,7 @@ size: "M"
 tech: ["HTML", "CSS", "JavaScript"]
 summary: "A hand-coded, single-page portfolio built with vanilla HTML, CSS, and JavaScript to showcase my early projects."
 link: "#"
-image: "/projects/OldPort1.png"
+image: "../../assets/projects/OldPort1.png"
 showMoreButton: true
 ---
 

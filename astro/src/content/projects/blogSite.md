@@ -5,7 +5,7 @@ size: "L"
 tech: ["Flask", "Python", "SQLite"]
 summary: "A security-focused Flask blog implementing encryption, MFA, role-based access control, attack detection, and detailed security logging."
 link: "#"
-image: "/projects/blog-login.png"
+image: "../../assets/projects/blog-login.png"
 showMoreButton: true
 ---
 

@@ -5,7 +5,7 @@ size: "M"
 tech: ["Python", "PyTorch", "Pygame"]
 summary: "A hackathon game prototype where an AI-controlled hunter adapts to the player's movement patterns and chases them in real time."
 link: "#"
-image: "/projects/aihunter1.png"
+image: "../../assets/projects/aihunter1.png"
 showMoreButton: true
 ---
 

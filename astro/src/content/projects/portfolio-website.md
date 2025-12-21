@@ -5,7 +5,7 @@ size: "M"
 tech: ["Astro", "Tailwind CSS", "TypeScript"]
 summary: "A modern, responsive portfolio website showcasing my skills and projects."
 link: "#"
-image: "/projects/ThisSite.png"
+image: "../../assets/projects/ThisSite.png"
 showMoreButton: true
 ---
 
