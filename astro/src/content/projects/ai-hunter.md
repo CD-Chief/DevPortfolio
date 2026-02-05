@@ -1,5 +1,5 @@
 ---
-id: 5
+id: 6
 title: "AI Hunter (Hackathon Project)"
 size: "M"
 tech: ["Python", "PyTorch", "Pygame"]

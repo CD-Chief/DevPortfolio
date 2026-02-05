@@ -1,5 +1,5 @@
 ---
-id: 7
+id: 3
 title: "DevOps Web Application"
 size: "L"
 tech: ["React", "Flask", "PostgreSQL", "Docker", "Traefik", "GitHub Actions", "Azure"]
@@ -30,10 +30,10 @@ A **Traefik reverse proxy** sits at the edge of the system, routing traffic to t
 This design provides scalability and isolation while ensuring consistent deployments across environments.
 
 **Architecture Diagram:**  
-![System Architecture Diagram](/projects/DevOpsApp-Architecture.png)
+![System Architecture Diagram](../../assets/projects/DevOpsApp-Architecture.png)
 
 **Database Schema:**  
-![Database Schema](/projects/DevOpsApp-DB.png)
+![Database Schema](../../assets/projects/DevOpsApp-DB.png)
 
 ## Tools and Technology Rationale
 
@@ -63,7 +63,7 @@ For cloud deployment, the backend image was pushed to Docker Hub and run via **A
 Future goals include implementing full Infrastructure-as-Code using **Bicep** or **Terraform** for repeatable cloud provisioning.
 
 **CI/CD Overview:**  
-![Pipeline Flow Diagram](/projects/DevOpsApp-Pipeline.png)
+![Pipeline Flow Diagram](../../assets/projects/DevOpsApp-Pipeline.png)
 
 ## Maintainability & Scalability
 
@@ -72,7 +72,7 @@ Future goals include implementing full Infrastructure-as-Code using **Bicep** or
 - **Cloud Readiness:** Vertical scaling handled by adjusting ACI CPU and memory allocations, while PostgreSQL can migrate to a managed service for reliability.
 
 **Scaling Diagram:**  
-![Horizontal Scaling Diagram](/projects/DevOpsApp-Scaling.png)
+![Horizontal Scaling Diagram](../../assets/projects/DevOpsApp-Scaling.png)
 
 ## Observability
 
@@ -80,7 +80,7 @@ System observability was achieved through structured logging in Flask using Pyth
 Logs can be viewed both locally (`docker logs`) and in Azure deployments using container insights.
 
 **Example Logs:**  
-![Example Logs](/projects/DevOpsApp-Logs.png)
+![Example Logs](../../assets/projects/DevOpsApp-Logs.png)
 
 ## Security
 
@@ -112,11 +112,11 @@ Future improvements:
 ## Visuals
 
 **CI Workflow Passing Tests**  
-![GitHub Actions Tests](/projects/DevOpsApp-CI.png)
+![GitHub Actions Tests](../../assets/projects/DevOpsApp-CI.png)
 
 **Local Deployment Verification**  
-![Deployed Backend Screenshot](/projects/DevOpsApp-Deployment.png)
+![Deployed Backend Screenshot](../../assets/projects/DevOpsApp-Deployment.png)
 
 ## Links
 
-- GitHub Repository: [DevOps Web App Project](#)
+- GitHub Repository under university organization
