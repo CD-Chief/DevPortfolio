@@ -1,9 +1,21 @@
 ---
+import { render } from 'astro:content';
+
 interface Props {
   projects: any[];
 }
 
 const { projects } = Astro.props;
+
+const renderedProjects = await Promise.all(
+  projects.map(async (project) => {
+    const { Content } = await render(project);
+    return {
+      id: project.data.id,
+      Content,
+    };
+  })
+);
 ---
 
 <!-- Modal container (hidden by default) -->
@@ -30,12 +42,12 @@ const { projects } = Astro.props;
 
     <!-- Body with scroll - contains all pre-rendered project content -->
     <div id="modalBody" class="overflow-y-auto p-6 flex-1">
-      {projects.map(async (project) => {
-        const { Content } = await project.render();
+      {renderedProjects.map((project) => {
+        const Content = project.Content;
         return (
           <div 
             class="project-content hidden prose prose-lg max-w-none" 
-            data-project-id={project.data.id}
+            data-project-id={project.id}
           >
             <Content />
           </div>
@@ -110,6 +122,8 @@ const { projects } = Astro.props;
 
   // Close modal function
   function closeModal() {
+    if (!modal) return;
+
     modal.classList.remove('show');
     
     // Get the scroll position from body top
@@ -154,7 +168,7 @@ const { projects } = Astro.props;
         const projectTitle = button.getAttribute('data-project-title');
         
         if (projectId && projectTitle) {
-          window.openProjectModal(Number(projectId), projectTitle);
+          (window as any).openProjectModal(Number(projectId), projectTitle);
         }
         
         return false;
