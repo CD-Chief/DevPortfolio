@@ -4,16 +4,18 @@ import ChiefCutout from '../assets/ChiefCutout3.webp';
 import Triangle from '../assets/Triangle.svg';
 ---
 
-<div class="w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
+<div class="hero-root w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
 	<div class="flex flex-col items-center relative z-10">
 		<!-- wrapper sized to the chief image so absolute children position relative to it -->
 		<div class="relative inline-block">
 			<Image
 				src={ChiefCutout}
 				alt="Chief Cutout"
-				width={500}
-				height={500}
-				class="block z-10"
+				width={ChiefCutout.width}
+				height={ChiefCutout.height}
+				fit="contain"
+				class="block z-10 h-auto w-[90vw] max-w-[500px] min-w-0"
+				sizes="(max-width: 640px) 90vw, 500px"
 				fetchpriority="high"
 				loading="eager"
 			/>
@@ -25,6 +27,8 @@ import Triangle from '../assets/Triangle.svg';
 					alt="Triangle"
 					width={150}
 					height={150}
+					class="h-auto w-[28vw] max-w-[150px] min-w-0"
+					sizes="(max-width: 640px) 28vw, 150px"
 					loading="lazy"
     				fetchpriority="low"
 				/>
@@ -84,9 +88,7 @@ import Triangle from '../assets/Triangle.svg';
 	</div>
 	
 	<!-- Footer section at bottom of page -->
-	<div class="absolute bottom-8 flex flex-col items-center gap-4">
-		<p class="text-Primary1 font-Display2 text-sm">Proudly running on a Raspberry Pi in my room</p>
-		
+	<div class="absolute bottom-8 flex flex-col items-center">
 		<!-- Chevron down -->
 		<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-Primary1 animate-bounce">
 			<path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
@@ -96,7 +98,7 @@ import Triangle from '../assets/Triangle.svg';
 	<!-- Pi Stats Modal -->
 	<div
 		id="pi-stats-modal"
-		class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden"
+		class="pi-modal fixed inset-0 bg-black/40 z-50 hidden"
 	>
 		<div class="bg-white rounded-xl shadow-lg px-6 py-4 max-w-sm w-full mx-4" id="pi-stats-content">
 			<h3 class="text-lg font-Display1 mb-3 text-Neutral-Dark">Raspberry Pi Status</h3>
@@ -125,6 +127,8 @@ import Triangle from '../assets/Triangle.svg';
 		if (!trigger || !modal || !closeBtn || !bodyEl) return;
 
 		async function loadStats() {
+			if (!bodyEl) return;
+
 			bodyEl.textContent = 'Loading…';
 			try {
 				const res = await fetch('/api/pi-stats.json');
@@ -164,8 +168,14 @@ import Triangle from '../assets/Triangle.svg';
 
 <style>
 	/* Prevent horizontal overflow from animated triangle */
-	.w-full {
+	.hero-root {
 		overflow-x: hidden;
+	}
+
+	.pi-modal:not(.hidden) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	/* Triangle animation: slide in from left, fade in, and rotate into position */
