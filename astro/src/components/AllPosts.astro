@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from './PostCard.astro';
+import { slugify } from '../utils/slug';
+
+const allPosts = await getCollection('posts');
+
+const posts = allPosts.sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
+---
+
+<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
+  <div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
+    <div class="flex items-center justify-between mb-8">
+      <a
+        href="/"
+        class="px-6 py-2 rounded-lg font-Display2 font-medium transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
+      >
+        Home
+      </a>
+      <h2 class="text-4xl font-Display1 text-center flex-1 text-Neutral-Dark">All Posts</h2>
+      <div class="w-[100px]"></div>
+    </div>
+
+    <div class="flex justify-center mb-12">
+      <input
+        type="text"
+        id="postFilter"
+        placeholder="Filter by title, excerpt, or tag..."
+        class="filter-input px-6 py-3 rounded-lg font-Display2 w-full max-w-md border-2 border-Neutral-Dark text-Neutral-Dark transition-all duration-300"
+      />
+    </div>
+
+    <div id="postsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+      {posts.map((post) => {
+        const slug = post.data.slug ?? slugify(post.data.title);
+        const searchIndex = [post.data.title, post.data.excerpt, post.data.tags.join(' ')].join(' ');
+
+        return (
+          <div class="post-card" data-search={searchIndex.toLowerCase()}>
+            <PostCard
+              title={post.data.title}
+              slug={slug}
+              coverImage={post.data.coverImage}
+              tags={post.data.tags}
+              excerpt={post.data.excerpt}
+              publishedAt={post.data.publishedAt}
+            />
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .filter-input {
+    outline: none;
+    background-color: white;
+  }
+
+  .filter-input:focus {
+    border-width: 3px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .filter-input::placeholder {
+    color: #9CA3AF;
+  }
+
+  .post-card {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .post-card.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  const filterInput = document.getElementById('postFilter') as HTMLInputElement;
+  const postsGrid = document.getElementById('postsGrid');
+
+  if (filterInput && postsGrid) {
+    filterInput.addEventListener('input', (e) => {
+      const filterValue = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      const postCards = postsGrid.querySelectorAll('[data-search]');
+
+      postCards.forEach((card) => {
+        const searchText = card.getAttribute('data-search') || '';
+
+        if (filterValue === '' || searchText.includes(filterValue)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  }
+</script>

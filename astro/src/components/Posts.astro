@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from './PostCard.astro';
+import { slugify } from '../utils/slug';
+
+const allPosts = await getCollection('posts');
+
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
+
+const latestPosts = sortedPosts.slice(0, 2);
+---
+
+<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
+  <div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
+    <a href="/blog" class="block mb-12">
+      <h2 class="text-4xl font-Display1 text-center text-Neutral-Dark transition-all duration-300 hover:text-Primary1 hover:scale-105 cursor-pointer">Blog</h2>
+    </a>
+
+    <div class="grid grid-cols-1 gap-8 mb-12 w-full">
+      {latestPosts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          slug={post.data.slug ?? slugify(post.data.title)}
+          coverImage={post.data.coverImage}
+          tags={post.data.tags}
+          excerpt={post.data.excerpt}
+          publishedAt={post.data.publishedAt}
+        />
+      ))}
+    </div>
+
+    <div class="flex justify-center">
+      <a
+        href="/blog"
+        class="px-8 py-3 rounded-lg font-Display2 font-medium text-lg transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
+      >
+        More Posts
+      </a>
+    </div>
+  </div>
+</section>
