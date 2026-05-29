@@ -5,7 +5,12 @@ excerpt: "A short introduction to why I am writing more openly about my work, my
 coverImage: "../../assets/posts/portfolioMockup.png"
 publishedAt: "2026-05-29"
 tags: ["Blog", "DevOps", "Career", "Writing", "Portfolio"]
-relatedPosts: ["designing-a-portfolio-with-astro"]
+relatedProjects: [5]
+links:
+  - label: "My LinkedIn"
+    url: "https://www.linkedin.com/in/chief-daniel"
+  - label: "Email Me"
+    url: "mailto:chief.d.osei@gmail.com"
 ---
 
 
