@@ -1,6 +1,6 @@
 # Portfolio Website
 
-A modern, performance-optimized portfolio website built with Astro and self-hosted on a Raspberry Pi.
+A modern, performance-optimized portfolio website built with Astro and self-hosted on an IONOS VPS.
 
 🌐 **Live Site**: [chiefosei.dev](https://chiefosei.dev)
 
@@ -16,7 +16,7 @@ This portfolio showcases my projects, technical skills, and development journey.
 - **Responsive Design**: Mobile-first approach with fluid typography and layouts
 - **Interactive Elements**: Project modals, filtering, and smooth animations
 - **Performance-First**: Optimized LCP, CLS, and TBT scores
-- **Self-Hosted**: Running on a Raspberry Pi in my room
+- **Self-Hosted**: Running on an IONOS VPS
 - **Live Stats**: Real-time Raspberry Pi system monitoring
 
 ## 🏗️ Tech Stack
@@ -28,8 +28,7 @@ This portfolio showcases my projects, technical skills, and development journey.
 - **Astro Content Collections** - Type-safe markdown content
 
 ### Hosting & Infrastructure
-- **Raspberry Pi** - Physical server hosting the site
-- **[Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/)** - Secure public access without port forwarding
+- **IONOS VPS** - Virtual private server hosting the site
 - **Custom Domain** - Accessible at [chiefosei.dev](https://chiefosei.dev)
 
 ### Performance Optimizations
@@ -38,35 +37,6 @@ This portfolio showcases my projects, technical skills, and development journey.
 - Priority hints for LCP images
 - Content visibility for off-screen elements
 - Minimal JavaScript footprint
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or pnpm
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/CD-Chief/DevPortfolio.git
-cd DevPortfolio/astro
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-Visit `http://localhost:4321` to see the site locally.
-
-### Build for Production
-
-```bash
-npm run build
-npm run preview
-```
 
 ## 📁 Project Structure
 
@@ -97,10 +67,10 @@ astro/
 
 ## 🎯 Key Features Explained
 
-### Self-Hosting on Raspberry Pi
+### Self-Hosting on an IONOS VPS
 
-The entire site runs on a Raspberry Pi in my room, demonstrating:
-- **Resource Efficiency**: Optimized for low-power hardware
+The entire site runs on an IONOS VPS, demonstrating:
+- **Resource Efficiency**: Optimized for low-cost server resources
 - **DevOps Skills**: Server management, monitoring, and deployment
 - **Real-World Infrastructure**: Hands-on experience with production hosting
 
@@ -150,7 +120,7 @@ Edit `src/data/skills.json` to add or modify skill entries.
 
 ## 📊 Live System Stats
 
-The site includes a live stats modal that displays Raspberry Pi metrics:
+The site includes a live stats modal that displays server metrics:
 - CPU temperature
 - System load
 - RAM usage
@@ -167,4 +137,4 @@ The site includes a live stats modal that displays Raspberry Pi metrics:
 
 ---
 
-**Built with ❤️ and hosted on a Raspberry Pi**
+**Built with ❤️ and hosted on a ~~Raspberry Pi~~ VPS**
