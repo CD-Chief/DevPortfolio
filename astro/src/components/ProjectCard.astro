@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import Tag from './Tag.astro';
 
 interface Props {
   name: string;
@@ -22,55 +23,6 @@ const sizeColors = {
   L: 'text-red-200'
 };
 
-// Technology tag colors - generalized categories
-const getTechColor = (tech: string) => {
-  const techLower = tech.toLowerCase();
-  
-  // Styling
-  if (techLower.includes('css') || techLower.includes('tailwind') || techLower.includes('sass') || 
-      techLower.includes('figma')) {
-    return 'bg-pink-100 text-pink-700 border-pink-300';
-  }
-  
-  // Backend
-  if (techLower.includes('node') || techLower.includes('express') || techLower.includes('python') || 
-      techLower.includes('flask') || techLower.includes('next') || techLower.includes('sanity')) {
-    return 'bg-green-100 text-green-700 border-green-300';
-  }
-  
-  // Database
-  if (techLower.includes('mongo') || techLower.includes('sql') || techLower.includes('database')) {
-    return 'bg-purple-100 text-purple-700 border-purple-300';
-  }
-  
-  // Hardware
-  if (techLower.includes('raspberry') || techLower.includes('pi')) {
-    return 'bg-red-100 text-red-700 border-red-300';
-  }
-  
-  // AI/ML
-  if (techLower.includes('pytorch') || techLower.includes('mediapipe') || techLower.includes('gemini') || 
-      techLower.includes('api')) {
-    return 'bg-indigo-100 text-indigo-700 border-indigo-300';
-  }
-  
-  // Web
-  if (techLower.includes('html') || techLower.includes('javascript') || techLower.includes('typescript') || 
-      techLower.includes('react') || techLower.includes('vue') || techLower.includes('angular') || 
-      techLower.includes('astro')) {
-    return 'bg-blue-100 text-blue-700 border-blue-300';
-  }
-  
-  // DevOps & Cloud
-  if (techLower.includes('docker') || techLower.includes('traefik') || techLower.includes('github actions') || 
-      techLower.includes('azure') || techLower.includes('aws') || techLower.includes('gcp') || 
-      techLower.includes('kubernetes') || techLower.includes('ci/cd')) {
-    return 'bg-orange-100 text-orange-700 border-orange-300';
-  }
-  
-  // Other
-  return 'bg-gray-100 text-gray-700 border-gray-300';
-};
 ---
 
 <div class="bg-white shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200 w-full">
@@ -105,9 +57,7 @@ const getTechColor = (tech: string) => {
         <h4 class="text-sm font-semibold text-gray-600 mb-2">Technologies</h4>
         <div class="flex flex-wrap gap-2 justify-center">
           {technologies.map((tech) => (
-            <span class={`px-3 py-1 rounded-full text-xs font-medium border ${getTechColor(tech)}`}>
-              {tech}
-            </span>
+            <Tag label={tech} />
           ))}
         </div>
       </div>
