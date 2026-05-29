@@ -53,13 +53,14 @@ const relatedProjects = allProjects.filter((project) => relatedProjectIds.includ
         </div>
       </header>
 
-      <div class="mb-8">
+      <div class="mb-8 rounded-xl border border-gray-200">
         <Image
           src={post.data.coverImage}
           alt={post.data.title}
-          width={960}
-          height={540}
-          class="w-full h-auto object-contain rounded-xl border border-gray-200"
+          width={post.data.coverImage.width}
+          height={post.data.coverImage.height}
+          sizes="(max-width: 768px) 100vw, 800px"
+          class="w-full h-auto object-contain rounded-xl"
         />
       </div>
 
