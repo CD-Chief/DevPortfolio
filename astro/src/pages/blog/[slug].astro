@@ -22,7 +22,7 @@ const allProjects = await getCollection('projects');
 const relatedPostSlugs = post.data.relatedPosts ?? [];
 const relatedPosts = relatedPostSlugs
   .map((slug) => allPosts.find((p) => (p.data.slug ?? slugify(p.data.title)) === slug))
-  .filter(Boolean);
+  .filter((relatedPost): relatedPost is (typeof allPosts)[number] => Boolean(relatedPost));
 
 const relatedProjectIds = post.data.relatedProjects ?? [];
 const relatedProjects = allProjects.filter((project) => relatedProjectIds.includes(project.data.id));
