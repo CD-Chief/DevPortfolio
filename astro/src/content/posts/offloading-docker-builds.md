@@ -2,7 +2,7 @@
 title: "Offloading Docker Builds with GHCR"
 slug: "offloading-docker-builds"
 excerpt: "How moving the build step off my VPS stopped crashes and made deployments dramatically faster."
-coverImage: "../../assets/posts/portfolioMockup.png"
+coverImage: "../../assets/posts/coolCover.svg"
 publishedAt: "2026-06-04"
 tags: ["DevOps", "Docker", "GitHub Actions", "GHCR", "Coolify", "VPS"]
 relatedProjects: [3]
@@ -16,7 +16,8 @@ While working on a client project building a website for a recruiting agency, I 
 
 I was already running multiple other sites, and because it is a small VPS, I noticed that trying to redeploy and rebuild the container after an update would sometimes cause the VPS to crash. I would have to restart the whole server to get things running again.
 
-IMAGE OF GAP IN CPU ACTIVITY.
+![Grafana CPU usage graph showing build spikes](../../assets/posts/grafanaDash.png)
+*Grafana CPU usage graph showing build spikes*
 
 I thought I had already hit the bottleneck and started thinking about buying a more powerful VPS. After some research, I came across the idea of using a container registry. I had seen the term before on another project where I used the Docker container registry to temporarily deploy a backend on an Azure instance, but I hadn’t thought much more about it at the time.
 
