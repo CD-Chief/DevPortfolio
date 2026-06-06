@@ -13,5 +13,8 @@
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^6.0.4",
     "tailwindcss": "^4.1.16"
+  },
+  "overrides": {
+    "vite": "^7"
   }
 }
