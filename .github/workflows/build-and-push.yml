@@ -17,8 +17,7 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/cd-chief/dev-portfolio
-  # Replace with your Coolify domain (no trailing slash)
-  COOLIFY_URL: https://coolify.REPLACE-ME.example
+  COOLIFY_URL: https://server.chiefosei.dev
 
 jobs:
   build-and-push:
