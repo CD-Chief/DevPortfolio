@@ -139,18 +139,24 @@ import Triangle from '../assets/Triangle.svg';
 
 			bodyEl.textContent = 'Loading…';
 			try {
-				const res = await fetch('/api/pi-stats.json');
+				const res = await fetch('/api/server-stats.json');
 				if (!res.ok) throw new Error('Request failed');
 				const data = await res.json();
 
-				const cpuTemp = data.cpuTempC !== null ? `${data.cpuTempC.toFixed(1)} °C` : 'N/A';
 				const uptimeHours = Math.round(data.uptimeSeconds / 3600);
+				const ramPercent = Math.min(100, Math.round((data.memory.usedMb / data.memory.totalMb) * 100));
 
 				bodyEl.innerHTML = `
-					<p><strong>CPU Temp:</strong> ${cpuTemp}</p>
+					<p><strong>CPU:</strong> ${data.cpuPercent}%</p>
+					<div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden" role="meter" aria-label="CPU used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${data.cpuPercent}">
+						<div class="h-full rounded-full bg-Primary2" style="width: ${data.cpuPercent}%"></div>
+					</div>
 					<p><strong>Load (1m):</strong> ${data.load1.toFixed(2)}</p>
 					<p><strong>Load (5m):</strong> ${data.load5.toFixed(2)}</p>
-					<p><strong>RAM:</strong> ${data.memory.usedMb} / ${data.memory.totalMb} MB</p>
+					<p><strong>RAM:</strong> ${data.memory.usedMb} / ${data.memory.totalMb} MB (${ramPercent}%)</p>
+					<div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden" role="meter" aria-label="RAM used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${ramPercent}">
+						<div class="h-full rounded-full bg-Primary2" style="width: ${ramPercent}%"></div>
+					</div>
 					<p><strong>Uptime:</strong> ${uptimeHours} hours</p>
 				`;
 			} catch (err) {
