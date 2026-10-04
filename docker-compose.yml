@@ -1,0 +1,14 @@
+# Local production-style container for parity testing.
+# Optional .env file in this folder is passed into the container; it is git-ignored.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devportfolio:local
+    ports:
+      - "4321:4321"
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
