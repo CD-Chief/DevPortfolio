@@ -1,14 +1,14 @@
-name: Docker CI
+name: Build and Push
 
 on:
-  pull_request:
   push:
     branches:
       - main
       - dev
+  workflow_dispatch:
 
 concurrency:
-  group: docker-${{ github.ref }}
+  group: build-and-push-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -17,9 +17,13 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/cd-chief/dev-portfolio
+  # Replace with your Coolify domain (no trailing slash)
+  COOLIFY_URL: https://coolify.REPLACE-ME.example
 
 jobs:
-  docker:
+  build-and-push:
+    # Manual runs from other branches should not push images
+    if: github.ref_name == 'main' || github.ref_name == 'dev'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,31 +33,41 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
-        if: ${{ github.event_name == 'push' }}
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # main -> ghcr.io/cd-chief/dev-portfolio:main (moving tag)
+      # main -> ghcr.io/cd-chief/dev-portfolio:main-<short-sha> (rollback target)
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,format=long
-            type=ref,event=branch,enable=${{ github.ref_name == 'main' }}
-            type=ref,event=branch,enable=${{ github.ref_name == 'dev' }}
+            type=ref,event=branch
+            type=sha,format=short,prefix=${{ github.ref_name }}-
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          push: ${{ github.event_name == 'push' }}
+          push: true
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # One Coolify resource per branch, stored as repo secrets
+      - name: Redeploy on Coolify
+        env:
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          COOLIFY_UUID: ${{ github.ref_name == 'main' && secrets.COOLIFY_UUID_MAIN || secrets.COOLIFY_UUID_DEV }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            "$COOLIFY_URL/api/v1/deploy?uuid=$COOLIFY_UUID&force=false"
