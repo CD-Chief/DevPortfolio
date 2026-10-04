@@ -1,0 +1,88 @@
+name: PR Smoke Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+concurrency:
+  group: pr-smoke-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_TAG: portfolio-smoke:${{ github.sha }}
+  CONTAINER_NAME: portfolio-smoke
+  BASE_URL: http://127.0.0.1:4321
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Fail fast on code problems before touching Docker
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: astro/package-lock.json
+
+      - name: Install dependencies
+        working-directory: astro
+        run: npm ci
+
+      # - name: Lint
+      #   working-directory: astro
+      #   run: npm run lint   # no lint script yet
+
+      - name: Build
+        working-directory: astro
+        run: npm run build
+
+      # - name: Test
+      #   working-directory: astro
+      #   run: npm test   # enable once a test script exists
+
+      - name: Build Docker image
+        run: docker build -t "$IMAGE_TAG" .
+
+      - name: Start container
+        run: docker run -d --name "$CONTAINER_NAME" -p 4321:4321 "$IMAGE_TAG"
+
+      - name: Wait for readiness
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS "$BASE_URL/api/health"; then
+              echo
+              echo "Container is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Container did not become ready in 60 seconds"
+          exit 1
+
+      - name: Check routes
+        run: |
+          for path in / /projects /api/health /api/server-stats.json; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$path")
+            echo "$path -> $code"
+            if [ "$code" != "200" ]; then
+              echo "Route $path failed with $code"
+              exit 1
+            fi
+          done
+
+      - name: Dump container logs on failure
+        if: failure()
+        run: docker logs "$CONTAINER_NAME" || true
+
+      - name: Remove container
+        if: always()
+        run: docker rm -f "$CONTAINER_NAME" || true
