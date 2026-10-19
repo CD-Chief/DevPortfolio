@@ -1,13 +1,20 @@
 ---
-import { getTechColor } from '../lib/tagStyles';
+import { isInfra, type TechName } from '../data/tech';
 
 interface Props {
-  label: string;
+  label: TechName;
 }
 
 const { label } = Astro.props;
 ---
 
-<span class={`px-3 py-1 rounded-full text-xs font-medium border ${getTechColor(label)}`}>
+<span
+  class:list={[
+    'rounded-md border px-2 py-1 font-Mono text-[11px] leading-none',
+    isInfra(label)
+      ? 'border-accent/30 bg-accent/10 text-accent'
+      : 'border-line bg-panel-raised/60 text-ink-muted',
+  ]}
+>
   {label}
 </span>

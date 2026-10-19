@@ -1,0 +1,27 @@
+---
+import Tag from './Tag.astro';
+import { sortTech, type TechName } from '../data/tech';
+
+interface Props {
+  tags: readonly TechName[];
+  // Cards cap the list; full pages and the project modal show everything
+  max?: number;
+  class?: string;
+}
+
+const { tags, max = Infinity, class: className } = Astro.props;
+const sorted = sortTech(tags);
+const shown = sorted.slice(0, max);
+const hidden = sorted.slice(max);
+---
+
+{sorted.length > 0 && (
+  <div class:list={['flex flex-wrap gap-2', className]}>
+    {shown.map((tag) => <Tag label={tag} />)}
+    {hidden.length > 0 && (
+      <span class="px-1 py-1 font-Mono text-[11px] leading-none text-ink-muted" title={hidden.join(', ')}>
+        +{hidden.length}
+      </span>
+    )}
+  </div>
+)}

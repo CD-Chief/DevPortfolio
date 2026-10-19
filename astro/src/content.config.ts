@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { TECH_NAMES, TOPICS } from './data/tech';
 
 const projectsCollection = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
@@ -9,7 +10,7 @@ const projectsCollection = defineCollection({
       id: z.number(),
       title: z.string(),
       size: z.enum(['S', 'M', 'L']),
-      tech: z.array(z.string()),
+      tech: z.array(z.enum(TECH_NAMES)),
       image: image().optional(),
       summary: z.string(),
       link: z.string().optional(),
@@ -26,7 +27,8 @@ const postsCollection = defineCollection({
       excerpt: z.string(),
       coverImage: image(),
       publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-      tags: z.array(z.string()),
+      topic: z.enum(TOPICS),
+      tech: z.array(z.enum(TECH_NAMES)).default([]),
       relatedPosts: z.array(z.string()).optional(),
       relatedProjects: z.array(z.number()).optional(),
       links: z
