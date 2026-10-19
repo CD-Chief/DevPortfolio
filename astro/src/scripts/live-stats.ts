@@ -1,4 +1,4 @@
-import type { StatsPayload } from '../lib/stats/types';
+import type { ContainerGroup, StatsPayload } from '../lib/stats/types';
 
 const REFRESH_MS = 60_000;
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -44,6 +44,9 @@ function drawChart(el: HTMLElement, t: number[], series: Series[], max: number, 
 		svg.append(path);
 	}
 
+	const axis = el.querySelector<HTMLElement>('.axis-max');
+	if (axis) axis.textContent = `${+max.toFixed(2)}${unit.trim()}`;
+
 	const label = el.dataset.label ?? '';
 	const last = series.map((s) => s.values[n - 1]);
 	el.setAttribute(
@@ -80,47 +83,98 @@ function setText(root: HTMLElement, field: string, value: string) {
 	root.querySelectorAll<HTMLElement>(`[data-field="${field}"]`).forEach((node) => (node.textContent = value));
 }
 
+// Round an axis maximum up to a readable number (1, 2, 2.5, 5 x 10^n)
+function niceMax(v: number) {
+	const mag = 10 ** Math.floor(Math.log10(v));
+	return ([1, 2, 2.5, 5, 10].find((m) => m * mag >= v) ?? 10) * mag;
+}
+
+const formatRate = (kbs: number) => (kbs >= 1024 ? `${(kbs / 1024).toFixed(1)} MB/s` : `${kbs.toFixed(1)} KB/s`);
+const formatSize = (mb: number) => (mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`);
+
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text?: string) {
+	const node = document.createElement(tag);
+	node.className = className;
+	if (text !== undefined) node.textContent = text;
+	return node;
+}
+
+function renderContainers(list: HTMLElement, groups: ContainerGroup[]) {
+	const max = Math.max(1, ...groups.map((g) => g.memMb));
+	list.replaceChildren(
+		...groups.map((g) => {
+			const row = el('li', g.label === 'Other' ? 'crow crow--other' : 'crow');
+			const name = el('span', 'cname', g.label);
+			if (g.count > 1) name.append(el('small', '', ` ×${g.count}`));
+			const bar = el('span', 'cbar');
+			const fill = el('i', '');
+			fill.style.width = `${Math.max(2, (g.memMb / max) * 100)}%`;
+			bar.append(fill);
+			row.append(name, bar, el('span', 'cval', formatSize(g.memMb)));
+			return row;
+		}),
+	);
+}
+
+function renderHealthDots(dots: HTMLElement, total: number, healthy: number, unhealthy: number) {
+	const kinds = [
+		...Array<string>(unhealthy).fill('cdot cdot--bad'),
+		...Array<string>(healthy).fill('cdot cdot--ok'),
+		...Array<string>(Math.max(0, total - healthy - unhealthy)).fill('cdot'),
+	].slice(0, 40);
+	dots.replaceChildren(...kinds.map((k) => el('span', k)));
+}
+
 function render(root: HTMLElement, data: StatsPayload) {
 	const { current: c, history: h } = data;
 
 	setText(root, 'cpu', `${Math.round(c.cpu)}%`);
 	setText(root, 'mem', `${Math.round(c.mem)}%`);
 	setText(root, 'mem-detail', `${c.memUsedGb} / ${c.memTotalGb} GB`);
-	setText(root, 'net-in', `${c.netIn.toFixed(2)}`);
-	setText(root, 'net-out', `${c.netOut.toFixed(2)}`);
-	setText(root, 'load', c.load[0].toFixed(2));
-	setText(root, 'load-detail', `${c.load[1].toFixed(2)} · ${c.load[2].toFixed(2)}`);
+	setText(root, 'net-in', formatRate(c.netInKBs));
+	setText(root, 'net-out', formatRate(c.netOutKBs));
+	setText(root, 'net-24h', `${formatSize(c.net24hMb)} / 24h`);
+	setText(root, 'load-1', c.load[0].toFixed(2));
+	setText(root, 'load-5', c.load[1].toFixed(2));
+	setText(root, 'load-15', c.load[2].toFixed(2));
 	setText(root, 'uptime', formatUptime(c.uptimeSec));
 	setText(root, 'uptime-since', `since ${new Date(Date.now() - c.uptimeSec * 1000).toLocaleDateString()}`);
 	setText(root, 'containers', c.containers === null ? '–' : String(c.containers));
 
-	const bar = root.querySelector<HTMLElement>('[data-field="mem-bar"]');
-	if (bar) bar.style.width = `${Math.min(100, c.mem)}%`;
+	const healthy = c.containersHealthy ?? 0;
+	const unhealthy = c.containersUnhealthy ?? 0;
+	setText(root, 'containers-health', `${healthy} healthy · ${unhealthy} unhealthy`);
+
+	const ring = root.querySelector<SVGCircleElement>('[data-field="mem-ring"]');
+	if (ring) ring.style.strokeDasharray = `${Math.min(100, Math.max(0, c.mem))} 100`;
 
 	const dots = root.querySelector<HTMLElement>('[data-field="container-dots"]');
-	if (dots && c.containers !== null) {
-		dots.replaceChildren(
-			...Array.from({ length: Math.min(c.containers, 40) }, () => {
-				const d = document.createElement('span');
-				d.className = 'cdot';
-				return d;
-			}),
-		);
-	}
+	if (dots && c.containers !== null) renderHealthDots(dots, c.containers, healthy, unhealthy);
+
+	const list = root.querySelector<HTMLElement>('[data-field="top-containers"]');
+	if (list) renderContainers(list, c.topContainers);
 
 	const chart = (name: string) => root.querySelector<HTMLElement>(`[data-chart="${name}"]`);
-	const netMax = Math.max(0.5, ...h.netIn, ...h.netOut) * 1.15;
-	const loadMax = Math.max(1, ...h.load) * 1.15;
+	// Low floor so a quiet server still shows shape; real spikes rescale the axis
+	const loadMax = niceMax(Math.max(0.25, ...h.load1, ...h.load5, ...h.load15) * 1.2);
+	// Scale CPU to its 24h peak (at least 20%) so a quiet server isn't a flat line
+	const cpuMax = Math.min(100, niceMax(Math.max(20, ...h.cpu) * 1.25));
 
 	const cpuEl = chart('cpu');
-	if (cpuEl) drawChart(cpuEl, h.t, [{ values: h.cpu, cls: 's1' }], 100, '%');
-	const memEl = chart('mem');
-	if (memEl) drawChart(memEl, h.t, [{ values: h.mem, cls: 's2' }], 100, '%');
-	const netEl = chart('net');
-	if (netEl)
-		drawChart(netEl, h.t, [{ values: h.netIn, cls: 's1' }, { values: h.netOut, cls: 's2 dashed' }], netMax, ' MB/s');
+	if (cpuEl) drawChart(cpuEl, h.t, [{ values: h.cpu, cls: 's1' }], cpuMax, '%');
 	const loadEl = chart('load');
-	if (loadEl) drawChart(loadEl, h.t, [{ values: h.load, cls: 's1' }], loadMax, '');
+	if (loadEl)
+		drawChart(
+			loadEl,
+			h.t,
+			[
+				{ values: h.load1, cls: 's1' },
+				{ values: h.load5, cls: 's2 dashed' },
+				{ values: h.load15, cls: 's3 dotted' },
+			],
+			loadMax,
+			'',
+		);
 }
 
 export function initLiveStats(root: HTMLElement) {

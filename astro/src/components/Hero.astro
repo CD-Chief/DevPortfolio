@@ -23,21 +23,29 @@ import Socials from './Socials.astro';
 		</article>
 
 		<article class="tile" style="grid-area: mem">
-			<header><h2>Memory</h2><span class="value" data-field="mem">–</span></header>
-			<Chart name="mem" label="Memory usage" area />
-			<p class="sub" data-field="mem-detail"></p>
+			<header><h2>Memory</h2></header>
+			<div class="mem-ring-wrap">
+				<svg class="mem-ring" viewBox="0 0 100 100" aria-hidden="true">
+					<circle class="mem-ring-track" cx="50" cy="50" r="42" pathLength="100" />
+					<circle class="mem-ring-fill" cx="50" cy="50" r="42" pathLength="100" data-field="mem-ring" />
+				</svg>
+				<div class="mem-ring-label">
+					<span class="mem-ring-value" data-field="mem">–</span>
+					<span class="sub" data-field="mem-detail"></span>
+				</div>
+			</div>
 		</article>
 
 		<article class="tile" style="grid-area: net">
 			<header>
-				<h2>Network</h2>
-				<span class="legend">
-					<span class="key s1">in <b data-field="net-in">–</b></span>
-					<span class="key s2 dashed">out <b data-field="net-out">–</b></span>
-					<span class="unit">MB/s</span>
+				<h2>Top containers <span class="h2-sub">by memory</span></h2>
+				<span class="netline" aria-label="Network">
+					<span>↓ <b data-field="net-in">–</b></span>
+					<span>↑ <b data-field="net-out">–</b></span>
+					<span class="muted" data-field="net-24h"></span>
 				</span>
 			</header>
-			<Chart name="net" label="Network traffic in and out, MB/s" series={2} />
+			<ul class="clist" data-field="top-containers" aria-label="Memory used by container group"></ul>
 		</article>
 
 		<!-- Row 2: intro + toolbox -->
@@ -66,9 +74,13 @@ import Socials from './Socials.astro';
 		<article class="tile" style="grid-area: load">
 			<header>
 				<h2>Load average</h2>
-				<span class="value"><span data-field="load">–</span> <small data-field="load-detail"></small></span>
+				<span class="legend">
+					<span class="key s1">1m <b data-field="load-1">–</b></span>
+					<span class="key s2">5m <b data-field="load-5">–</b></span>
+					<span class="key s3">15m <b data-field="load-15">–</b></span>
+				</span>
 			</header>
-			<Chart name="load" label="1 minute load average" area />
+			<Chart name="load" label="Load average over 1, 5 and 15 minutes" series={3} />
 		</article>
 
 		<article class="tile tile--plain" style="grid-area: up">
@@ -80,6 +92,7 @@ import Socials from './Socials.astro';
 		<article class="tile tile--plain" style="grid-area: ctr">
 			<header><h2>Containers</h2></header>
 			<p class="big"><span data-field="containers">–</span> <small>running</small></p>
+			<p class="sub" data-field="containers-health"></p>
 			<div class="cdots" data-field="container-dots" aria-hidden="true"></div>
 		</article>
 	</div>
@@ -264,6 +277,7 @@ import Socials from './Socials.astro';
 
 	.tile header {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 8px;
@@ -331,21 +345,159 @@ import Socials from './Socials.astro';
 		border-top: 2px dashed var(--color-accent-2);
 	}
 
+	.key.s3::before {
+		border-top: 2px dotted var(--color-accent-3);
+	}
+
 	.cdots {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 5px;
 	}
 
+	/* One square per container: healthy, unhealthy, or no healthcheck */
 	.cdots :global(.cdot) {
 		width: 8px;
 		height: 8px;
 		border-radius: 2px;
+		background: var(--color-line);
+	}
+
+	.cdots :global(.cdot--ok) {
 		background: var(--color-accent);
 	}
 
-	.cdots :global(.cdot:nth-child(3n)) {
-		background: var(--color-accent-2);
+	.cdots :global(.cdot--bad) {
+		background: #f87171;
+	}
+
+	/* Memory ring */
+	.mem-ring-wrap {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.mem-ring {
+		width: 92px;
+		height: 92px;
+		flex-shrink: 0;
+		transform: rotate(-90deg);
+	}
+
+	.mem-ring circle {
+		fill: none;
+		stroke-width: 9;
+	}
+
+	.mem-ring-track {
+		stroke: var(--color-line);
+	}
+
+	.mem-ring-fill {
+		stroke: var(--color-accent-2);
+		stroke-linecap: round;
+		stroke-dasharray: 0 100;
+		transition: stroke-dasharray 900ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	/* A zero-length arc with round caps draws a dot; hide it until data arrives */
+	.hero[data-state='loading'] .mem-ring-fill {
+		opacity: 0;
+	}
+
+	.mem-ring-label {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.mem-ring-value {
+		font: 600 clamp(26px, 2.6vw, 34px)/1 var(--font-Mono);
+		color: var(--color-ink);
+	}
+
+	/* Top containers */
+	.h2-sub {
+		margin-left: 6px;
+		letter-spacing: 0.04em;
+		text-transform: none;
+		opacity: 0.7;
+	}
+
+	.netline {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 4px 12px;
+		font: 500 12px/1 var(--font-Mono);
+		color: var(--color-ink-muted);
+	}
+
+	.netline b {
+		color: var(--color-ink);
+		font-weight: 600;
+	}
+
+	.clist {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 9px 28px;
+		margin: auto 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	@media (min-width: 640px) {
+		.clist {
+			grid-template-columns: 1fr 1fr;
+			grid-auto-flow: column;
+			grid-template-rows: repeat(3, auto);
+		}
+	}
+
+	.clist :global(.crow) {
+		display: grid;
+		grid-template-columns: 7.5rem 1fr 4rem;
+		align-items: center;
+		gap: 10px;
+		font: 500 12px/1.2 var(--font-Mono);
+	}
+
+	.clist :global(.cname) {
+		overflow: hidden;
+		color: var(--color-ink);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.clist :global(.cname small) {
+		color: var(--color-ink-muted);
+	}
+
+	.clist :global(.cbar) {
+		height: 6px;
+		border-radius: 3px;
+		background: color-mix(in srgb, var(--color-line) 70%, transparent);
+		overflow: hidden;
+	}
+
+	.clist :global(.cbar i) {
+		display: block;
+		height: 100%;
+		border-radius: 3px;
+		background: var(--color-accent);
+		transition: width 700ms ease;
+	}
+
+	.clist :global(.crow--other .cbar i) {
+		background: var(--color-ink-muted);
+	}
+
+	.clist :global(.cval) {
+		color: var(--color-ink-muted);
+		text-align: right;
 	}
 
 	/* Intro */
@@ -417,6 +569,11 @@ import Socials from './Socials.astro';
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.mem-ring-fill,
+		.clist :global(.cbar i) {
+			transition: none;
+		}
+
 		.hero__blob,
 		.live {
 			animation: none;

@@ -30,6 +30,8 @@
     --color-ink-muted: #8b93b8;
     --color-accent: #5cc8e8;
     --color-accent-2: #6e7bf2;
+    /* Third chart series only */
+    --color-accent-3: #e879c0;
     --color-deep: #06164f;
 }
 

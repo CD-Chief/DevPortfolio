@@ -15,6 +15,7 @@ const { name, label, series = 1, area = false } = Astro.props;
 	<div class="crosshair" aria-hidden="true"></div>
 	{Array.from({ length: series }, (_, i) => <div class={`dot s${i + 1}`} aria-hidden="true"></div>)}
 	<div class="tip" aria-hidden="true"></div>
+	<div class="axis-max" aria-hidden="true"></div>
 </div>
 
 <style>
@@ -51,8 +52,16 @@ const { name, label, series = 1, area = false } = Astro.props;
 		stroke: var(--color-accent-2);
 	}
 
+	.chart :global(.line.s3) {
+		stroke: var(--color-accent-3);
+	}
+
 	.chart :global(.line.dashed) {
 		stroke-dasharray: 4 3;
+	}
+
+	.chart :global(.line.dotted) {
+		stroke-dasharray: 1 3;
 	}
 
 	.chart :global(.area.s1) {
@@ -61,6 +70,17 @@ const { name, label, series = 1, area = false } = Astro.props;
 
 	.chart :global(.area.s2) {
 		fill: color-mix(in srgb, var(--color-accent-2) 20%, transparent);
+	}
+
+	/* Top of the y-axis, so an auto-scaled chart is never mistaken for a 0-100 one */
+	.axis-max {
+		position: absolute;
+		top: -2px;
+		left: 0;
+		font: 500 10px/1 var(--font-Mono);
+		color: var(--color-ink-muted);
+		opacity: 0.7;
+		pointer-events: none;
 	}
 
 	.crosshair,
@@ -95,6 +115,10 @@ const { name, label, series = 1, area = false } = Astro.props;
 
 	.dot.s2 {
 		background: var(--color-accent-2);
+	}
+
+	.dot.s3 {
+		background: var(--color-accent-3);
 	}
 
 	.tip {
