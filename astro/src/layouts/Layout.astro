@@ -1,5 +1,38 @@
 ---
 import "../styles/global.css"
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { UMAMI } from '../data/analytics';
+
+interface Props {
+	title?: string;
+	description?: string;
+	type?: 'website' | 'article';
+	// Structured data (schema.org) for this page
+	jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+	// Keep a page out of search results (e.g. the 404 page)
+	noindex?: boolean;
+	// The homepage hero carries its own intro, so it skips the top nav
+	header?: boolean;
+}
+
+const {
+	title = 'Chief-Daniel Osei | DevOps & Cloud Infrastructure',
+	description = 'Chief-Daniel Osei builds and runs the infrastructure behind real websites: reproducible environments, CI/CD and monitoring. Based in Duisburg, Germany.',
+	type = 'website',
+	jsonLd,
+	noindex = false,
+	header = true,
+} = Astro.props;
+
+// Pages are prerendered, so a runtime env flag would be frozen at build time. Instead the script is
+// left out of `astro dev` and restricted to the production hostname: the tracker ignores any other
+// host (staging, previews, localhost), so only chiefosei.dev is ever counted.
+const analyticsDomain = Astro.site ? Astro.site.hostname : undefined;
+const trackAnalytics = import.meta.env.PROD && Boolean(analyticsDomain);
+// Match the links used across the site: no trailing slash except on the homepage
+const ogImage = new URL('/og-image.png', Astro.site);
+const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
 ---
 
 <!doctype html>
@@ -7,13 +40,46 @@ import "../styles/global.css"
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/cIconFlat.svg" />
+		<meta name="theme-color" content="#0d0c1a" />
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="Chief Osei" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Chief-Daniel Osei | Portfolio</title>
-		<script defer src="https://analytics.chiefosei.dev/script.js" data-website-id="870b8dfd-2bed-4142-ab92-887116583cf7"></script>
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="author" content="Chief-Daniel Osei" />
+		{noindex && <meta name="robots" content="noindex" />}
+		<link rel="canonical" href={canonical} />
+
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content="Chief-Daniel Osei" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:locale" content="en_GB" />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Chief-Daniel Osei: I build and run the infrastructure behind real websites." />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\u003c')} />}
+		{trackAnalytics && (
+			<script is:inline defer src={UMAMI.scriptUrl} data-website-id={UMAMI.websiteId} data-domains={analyticsDomain} />
+		)}
 	</head>
 	<body>
-		<slot />
+		{header && <SiteHeader />}
+		<main>
+			<slot />
+		</main>
+		<SiteFooter />
 	</body>
 </html>
 
@@ -22,6 +88,6 @@ import "../styles/global.css"
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 	}
 </style>

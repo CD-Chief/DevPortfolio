@@ -70,7 +70,7 @@ jobs:
 
       - name: Check routes
         run: |
-          for path in / /projects /api/health /api/server-stats.json; do
+          for path in / /projects /blog /api/health; do
             code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$path")
             echo "$path -> $code"
             if [ "$code" != "200" ]; then
@@ -78,6 +78,14 @@ jobs:
               exit 1
             fi
           done
+
+          # No Beszel credentials in CI, so 503 is the expected answer; anything else means the route is broken
+          code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/api/stats.json")
+          echo "/api/stats.json -> $code"
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "Route /api/stats.json failed with $code"
+            exit 1
+          fi
 
       - name: Dump container logs on failure
         if: failure()

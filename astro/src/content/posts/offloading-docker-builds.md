@@ -4,7 +4,8 @@ slug: "offloading-docker-builds"
 excerpt: "How moving the build step off my VPS stopped crashes and made deployments dramatically faster."
 coverImage: "../../assets/posts/coolCover.svg"
 publishedAt: "2026-06-04"
-tags: ["DevOps", "Docker", "GitHub Actions", "GHCR", "Coolify", "VPS"]
+topic: "CI/CD"
+tech: ["Docker", "GitHub Actions", "GHCR", "Coolify"]
 relatedProjects: [3]
 ---
 

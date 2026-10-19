@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import PostCard from './PostCard.astro';
+import SectionHeader from './SectionHeader.astro';
 import { slugify } from '../utils/slug';
 
 const allPosts = await getCollection('posts');
@@ -10,73 +11,41 @@ const posts = allPosts.sort(
 );
 ---
 
-<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
-  <div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
-    <div class="flex items-center justify-between mb-8">
-      <a
-        href="/"
-        class="px-6 py-2 rounded-lg font-Display2 font-medium transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
-      >
-        Home
-      </a>
-      <h2 class="text-4xl font-Display1 text-center flex-1 text-Neutral-Dark">All Posts</h2>
-      <div class="w-[100px]"></div>
-    </div>
+<section class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-8">
+  <SectionHeader as="h1" eyebrow="Blog" title="All posts">
+    <p class="max-w-2xl text-ink-muted">Write-ups on self-hosting, CI/CD and the things that broke along the way.</p>
+  </SectionHeader>
 
-    <div class="flex justify-center mb-12">
-      <input
-        type="text"
-        id="postFilter"
-        placeholder="Filter by title, excerpt, or tag..."
-        class="filter-input px-6 py-3 rounded-lg font-Display2 w-full max-w-md border-2 border-Neutral-Dark text-Neutral-Dark transition-all duration-300"
-      />
-    </div>
+  <label for="postFilter" class="sr-only">Filter posts</label>
+  <input
+    type="search"
+    id="postFilter"
+    placeholder="Filter by title, topic or technology"
+    class="field mb-10 max-w-md"
+  />
 
-    <div id="postsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
-      {posts.map((post) => {
-        const slug = post.data.slug ?? slugify(post.data.title);
-        const searchIndex = [post.data.title, post.data.excerpt, post.data.tags.join(' ')].join(' ');
+  <div id="postsGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {posts.map((post) => {
+      const slug = post.data.slug ?? slugify(post.data.title);
+      const searchIndex = [post.data.title, post.data.excerpt, post.data.topic, post.data.tech.join(' ')].join(' ');
 
-        return (
-          <div class="post-card" data-search={searchIndex.toLowerCase()}>
-            <PostCard
-              title={post.data.title}
-              slug={slug}
-              coverImage={post.data.coverImage}
-              tags={post.data.tags}
-              excerpt={post.data.excerpt}
-              publishedAt={post.data.publishedAt}
-            />
-          </div>
-        );
-      })}
-    </div>
+      return (
+        <div class="post-card" data-search={searchIndex.toLowerCase()}>
+          <PostCard
+            title={post.data.title}
+            slug={slug}
+            coverImage={post.data.coverImage}
+            topic={post.data.topic}
+            tech={post.data.tech}
+            excerpt={post.data.excerpt}
+            publishedAt={post.data.publishedAt}
+          />
+        </div>
+      );
+    })}
   </div>
+  <p id="postsEmpty" class="hidden py-12 text-center text-ink-muted">No posts match that.</p>
 </section>
-
-<style>
-  .filter-input {
-    outline: none;
-    background-color: white;
-  }
-
-  .filter-input:focus {
-    border-width: 3px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  }
-
-  .filter-input::placeholder {
-    color: #9CA3AF;
-  }
-
-  .post-card {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-
-  .post-card.hidden {
-    display: none;
-  }
-</style>
 
 <script>
   const filterInput = document.getElementById('postFilter') as HTMLInputElement;
@@ -87,15 +56,14 @@ const posts = allPosts.sort(
       const filterValue = (e.target as HTMLInputElement).value.toLowerCase().trim();
       const postCards = postsGrid.querySelectorAll('[data-search]');
 
+      let shown = 0;
       postCards.forEach((card) => {
         const searchText = card.getAttribute('data-search') || '';
-
-        if (filterValue === '' || searchText.includes(filterValue)) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+        const match = filterValue === '' || searchText.includes(filterValue);
+        card.classList.toggle('hidden', !match);
+        if (match) shown++;
       });
+      document.getElementById('postsEmpty')?.classList.toggle('hidden', shown > 0);
     });
   }
 </script>

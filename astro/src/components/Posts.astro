@@ -1,7 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import PostCard from './PostCard.astro';
+import SectionHeader from './SectionHeader.astro';
 import { slugify } from '../utils/slug';
+
+const POST_SLOTS = 3;
 
 const allPosts = await getCollection('posts');
 
@@ -9,35 +12,31 @@ const sortedPosts = allPosts.sort(
   (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
 );
 
-const latestPosts = sortedPosts.slice(0, 2);
+const latestPosts = sortedPosts.slice(0, POST_SLOTS);
+// Keep the grid even until there are enough posts to fill it
+const emptySlots = Math.max(0, POST_SLOTS - latestPosts.length);
 ---
 
-<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
-  <div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
-    <a href="/blog" class="block mb-12">
-      <h2 class="text-4xl font-Display1 text-center text-Neutral-Dark transition-all duration-300 hover:text-Primary1 hover:scale-105 cursor-pointer">Blog</h2>
-    </a>
+<section id="blog" class="mx-auto max-w-7xl scroll-mt-8 px-4 py-20 sm:px-8">
+  <SectionHeader eyebrow="Blog" title="Notes from running my own infrastructure" href="/blog" linkLabel="All posts" />
 
-    <div class="grid grid-cols-1 gap-8 mb-12 w-full">
-      {latestPosts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          slug={post.data.slug ?? slugify(post.data.title)}
-          coverImage={post.data.coverImage}
-          tags={post.data.tags}
-          excerpt={post.data.excerpt}
-          publishedAt={post.data.publishedAt}
-        />
-      ))}
-    </div>
-
-    <div class="flex justify-center">
-      <a
-        href="/blog"
-        class="px-8 py-3 rounded-lg font-Display2 font-medium text-lg transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
-      >
-        More Posts
-      </a>
-    </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {latestPosts.map((post) => (
+      <PostCard
+        title={post.data.title}
+        slug={post.data.slug ?? slugify(post.data.title)}
+        coverImage={post.data.coverImage}
+        topic={post.data.topic}
+        tech={post.data.tech}
+        excerpt={post.data.excerpt}
+        publishedAt={post.data.publishedAt}
+      />
+    ))}
+    {Array.from({ length: emptySlots }, () => (
+      <div class="hidden flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line p-8 text-center lg:flex">
+        <p class="eyebrow text-ink-muted">Up next</p>
+        <p class="text-sm text-ink-muted">More writing on the way.</p>
+      </div>
+    ))}
   </div>
 </section>

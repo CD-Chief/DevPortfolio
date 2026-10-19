@@ -2,7 +2,7 @@
 id: 4
 title: "Gaze-Guided Remote Camera (DurHackX 2025)"
 size: "M"
-tech: ["Raspberry Pi", "Python", "Flask", "React", "MediaPipe", "Gemini API"]
+tech: ["Raspberry Pi", "Python", "Flask", "React", "MediaPipe", "Gemini"]
 summary: "A gaze-controlled remote camera system using face tracking, a Raspberry Pi servo mount, and AI-generated scene descriptions for accessibility."
 link: "#"
 image: "../../assets/projects/Durhack1.png"
