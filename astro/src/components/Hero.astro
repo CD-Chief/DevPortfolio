@@ -1,228 +1,426 @@
 ---
-import { Image } from 'astro:assets';
-import ChiefCutout from '../assets/ChiefCutout3.webp';
-import Triangle from '../assets/Triangle.svg';
+import Chart from './home/Chart.astro';
+import Toolbox from './home/Toolbox.astro';
+import Socials from './Socials.astro';
 ---
 
-<div class="hero-root w-full min-h-screen relative flex flex-col items-center justify-center bg-Background1">
-	<div class="flex flex-col items-center relative z-10">
-		<!-- wrapper sized to the chief image so absolute children position relative to it -->
-		<div class="relative inline-block">
-			<Image
-				src={ChiefCutout}
-				alt="Chief Cutout"
-				width={ChiefCutout.width}
-				height={ChiefCutout.height}
-				fit="contain"
-				class="block z-10 h-auto w-[90vw] max-w-[500px] min-w-0"
-				sizes="(max-width: 640px) 90vw, 500px"
-				fetchpriority="high"
-				loading="eager"
-			/>
+<section class="hero" data-live-stats data-state="loading">
+	<div class="hero__blob hero__blob--a" aria-hidden="true"></div>
+	<div class="hero__blob hero__blob--b" aria-hidden="true"></div>
+	<div class="hero__blob hero__blob--c" aria-hidden="true"></div>
+	<div class="hero__grain" aria-hidden="true"></div>
 
-			<!-- triangle positioned slightly to the right of the chief image; responsive offsets -->
-			<div class="absolute top-[-70px] right-[-20px] sm:right-[-30px] md:right-[-40px] z-20 pointer-events-none triangle-animate">
-				<Image
-					src={Triangle}
-					alt="Triangle"
-					width={150}
-					height={150}
-					class="h-auto w-[28vw] max-w-[150px] min-w-0"
-					sizes="(max-width: 640px) 28vw, 150px"
-					loading="lazy"
-    				fetchpriority="low"
-				/>
+	<div class="layout">
+		<div class="status" style="grid-area: status">
+			<span><span class="live">Live</span> from the VPS running this site</span>
+			<span class="updated" data-field="updated" aria-live="polite"></span>
+		</div>
+
+		<!-- Row 1: two small, one long -->
+		<article class="tile" style="grid-area: cpu">
+			<header><h2>CPU</h2><span class="value" data-field="cpu">–</span></header>
+			<Chart name="cpu" label="CPU usage" area />
+		</article>
+
+		<article class="tile" style="grid-area: mem">
+			<header><h2>Memory</h2><span class="value" data-field="mem">–</span></header>
+			<Chart name="mem" label="Memory usage" area />
+			<p class="sub" data-field="mem-detail"></p>
+		</article>
+
+		<article class="tile" style="grid-area: net">
+			<header>
+				<h2>Network</h2>
+				<span class="legend">
+					<span class="key s1">in <b data-field="net-in">–</b></span>
+					<span class="key s2 dashed">out <b data-field="net-out">–</b></span>
+					<span class="unit">MB/s</span>
+				</span>
+			</header>
+			<Chart name="net" label="Network traffic in and out, MB/s" series={2} />
+		</article>
+
+		<!-- Row 2: intro + toolbox -->
+		<div class="intro" style="grid-area: intro">
+			<p class="eyebrow">Chief-Daniel Osei</p>
+			<h1>I build and run the infrastructure behind real websites.</h1>
+			<p class="lede">
+				CS graduate from Newcastle and founder of Chief Studios. I ship client sites with reproducible
+				environments, CI/CD and monitoring, and the server running this page is the one shown here. Based in
+				Duisburg, looking for DevOps and cloud roles in Germany from spring 2027.
+			</p>
+
+			<div class="cta-row">
+				<a href="#projects" class="btn btn-primary">See my projects</a>
+				<a href="mailto:chief.d.osei@gmail.com" class="btn btn-ghost">Get in touch</a>
+				<span class="divider" aria-hidden="true"></span>
+				<Socials />
 			</div>
 		</div>
 
-		<h1 class="text-Neutral-Dark font-Display2 text-center text-xl sm:text-2xl md:text-3xl">
-			Hi! I'm Chief-Daniel Osei, welcome to my website!
-		</h1>
-		<p class="mt-4 text-base sm:text-lg md:text-xl text-Neutral-Dark font-Display2 text-center max-w-2xl mx-auto">
-			I run Chief Studios, which serves over 1,000 users a month. I build and run the infrastructure behind client websites, from reproducible environments and CI/CD pipelines to full-stack monitoring. Take a look around!
-		</p>
-
-		<!-- Primary call to action -->
-		<a
-			href="#projects"
-			class="mt-6 px-8 py-3 rounded-lg font-Display2 font-medium text-lg transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
-		>
-			See my projects
-		</a>
-
-		<!-- Divider line -->
-		<div class="h-1 bg-Neutral-Dark mt-8 mb-8 rounded-full divider-grow"></div>
-
-		<!-- Social icons row -->
-		<div class="flex gap-12 items-center mb-16">
-			<!-- LinkedIn -->
-			<a href="https://www.linkedin.com/in/chief-daniel" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" title="LinkedIn profile" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
-				<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-600 hover:text-blue-800 transition-colors">
-					<path d="M6.5 8C7.32843 8 8 7.32843 8 6.5C8 5.67157 7.32843 5 6.5 5C5.67157 5 5 5.67157 5 6.5C5 7.32843 5.67157 8 6.5 8Z" fill="currentColor"/>
-					<path d="M5 10C5 9.44772 5.44772 9 6 9H7C7.55228 9 8 9.44771 8 10V18C8 18.5523 7.55228 19 7 19H6C5.44772 19 5 18.5523 5 18V10Z" fill="currentColor"/>
-					<path d="M11 19H12C12.5523 19 13 18.5523 13 18V13.5C13 12 16 11 16 13V18.0004C16 18.5527 16.4477 19 17 19H18C18.5523 19 19 18.5523 19 18V12C19 10 17.5 9 15.5 9C13.5 9 13 10.5 13 10.5V10C13 9.44771 12.5523 9 12 9H11C10.4477 9 10 9.44772 10 10V18C10 18.5523 10.4477 19 11 19Z" fill="currentColor"/>
-					<path fill-rule="evenodd" clip-rule="evenodd" d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z" fill="currentColor"/>
-				</svg>
-			</a>
-			
-			<!-- GitHub -->
-			<a href="https://github.com/CD-Chief" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub profile" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
-				<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-600 hover:text-blue-800 transition-colors">
-					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-						<g transform="translate(-140.000000, -7559.000000)" fill="currentColor">
-							<g transform="translate(56.000000, 160.000000)">
-								<path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399"/>
-							</g>
-						</g>
-					</g>
-				</svg>
-			</a>
-			
-			<!-- Email -->
-			<a href="mailto:chief.d.osei@gmail.com" aria-label="Email me" title="Email me" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
-				<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-600 hover:text-blue-800 transition-colors">
-					<path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					<rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-				</svg>
-			</a>
-			
-			<!-- Server -->
-			<a href="#" id="pi-stats-trigger" aria-label="Server status" title="Server status: live stats from my server" aria-haspopup="dialog" aria-controls="pi-stats-modal" class="w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform">
-				<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-blue-600 hover:text-blue-800 transition-colors">
-					<path d="M18 7H18.01M15 7H15.01M18 17H18.01M15 17H15.01M6 10H18C18.9319 10 19.3978 10 19.7654 9.84776C20.2554 9.64477 20.6448 9.25542 20.8478 8.76537C21 8.39782 21 7.93188 21 7C21 6.06812 21 5.60218 20.8478 5.23463C20.6448 4.74458 20.2554 4.35523 19.7654 4.15224C19.3978 4 18.9319 4 18 4H6C5.06812 4 4.60218 4 4.23463 4.15224C3.74458 4.35523 3.35523 4.74458 3.15224 5.23463C3 5.60218 3 6.06812 3 7C3 7.93188 3 8.39782 3.15224 8.76537C3.35523 9.25542 3.74458 9.64477 4.23463 9.84776C4.60218 10 5.06812 10 6 10ZM6 20H18C18.9319 20 19.3978 20 19.7654 19.8478C20.2554 19.6448 20.6448 19.2554 20.8478 18.7654C21 18.3978 21 17.9319 21 17C21 16.0681 21 15.6022 20.8478 15.2346C20.6448 14.7446 20.2554 14.3552 19.7654 14.1522C19.3978 14 18.9319 14 18 14H6C5.06812 14 4.60218 14 4.23463 14.1522C3.74458 14.3552 3.35523 14.7446 3.15224 15.2346C3 15.6022 3 16.0681 3 17C3 17.9319 3 18.3978 3.15224 18.7654C3.35523 19.2554 3.74458 19.6448 4.23463 19.8478C4.60218 20 5.06812 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-			</a>
+		<div class="toolbox-wrap" style="grid-area: toolbox">
+			<Toolbox />
 		</div>
-	</div>
-	
-	<!-- Footer section at bottom of page -->
-	<div class="absolute bottom-8 flex flex-col items-center">
-		<!-- Chevron down -->
-		<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-blue-600 animate-bounce">
-			<path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
-		</svg>
-	</div>
 
-	<!-- Pi Stats Modal -->
-	<div
-		id="pi-stats-modal"
-		class="pi-modal fixed inset-0 bg-black/40 z-50 hidden"
-	>
-		<div class="bg-white rounded-xl shadow-lg px-6 py-4 max-w-sm w-full mx-4" id="pi-stats-content">
-			<h3 class="text-lg font-Display1 mb-3 text-Neutral-Dark">Server Status</h3>
-			<div id="pi-stats-body" class="text-sm text-gray-700 space-y-2">
-				Loading…
-			</div>
-			<button
-				type="button"
-				id="pi-stats-close"
-				class="mt-4 px-4 py-1.5 border border-Neutral-Dark text-Neutral-Dark rounded-lg hover:bg-Neutral-Dark hover:text-white transition-colors"
-			>
-				Close
-			</button>
-		</div>
+		<!-- Row 3: one long, two small -->
+		<article class="tile" style="grid-area: load">
+			<header>
+				<h2>Load average</h2>
+				<span class="value"><span data-field="load">–</span> <small data-field="load-detail"></small></span>
+			</header>
+			<Chart name="load" label="1 minute load average" area />
+		</article>
+
+		<article class="tile tile--plain" style="grid-area: up">
+			<header><h2>Uptime</h2></header>
+			<p class="big" data-field="uptime">–</p>
+			<p class="sub" data-field="uptime-since"></p>
+		</article>
+
+		<article class="tile tile--plain" style="grid-area: ctr">
+			<header><h2>Containers</h2></header>
+			<p class="big"><span data-field="containers">–</span> <small>running</small></p>
+			<div class="cdots" data-field="container-dots" aria-hidden="true"></div>
+		</article>
 	</div>
-    
-</div>
+</section>
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const trigger = document.getElementById('pi-stats-trigger');
-		const modal = document.getElementById('pi-stats-modal');
-		const closeBtn = document.getElementById('pi-stats-close');
-		const bodyEl = document.getElementById('pi-stats-body');
+	import { initLiveStats } from '../scripts/live-stats';
 
-		if (!trigger || !modal || !closeBtn || !bodyEl) return;
-
-		async function loadStats() {
-			if (!bodyEl) return;
-
-			bodyEl.textContent = 'Loading…';
-			try {
-				const res = await fetch('/api/server-stats.json');
-				if (!res.ok) throw new Error('Request failed');
-				const data = await res.json();
-
-				const uptimeHours = Math.round(data.uptimeSeconds / 3600);
-				const ramPercent = Math.min(100, Math.round((data.memory.usedMb / data.memory.totalMb) * 100));
-
-				bodyEl.innerHTML = `
-					<p><strong>CPU:</strong> ${data.cpuPercent}%</p>
-					<div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden" role="meter" aria-label="CPU used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${data.cpuPercent}">
-						<div class="h-full rounded-full bg-Primary2" style="width: ${data.cpuPercent}%"></div>
-					</div>
-					<p><strong>Load (1m):</strong> ${data.load1.toFixed(2)}</p>
-					<p><strong>Load (5m):</strong> ${data.load5.toFixed(2)}</p>
-					<p><strong>RAM:</strong> ${data.memory.usedMb} / ${data.memory.totalMb} MB (${ramPercent}%)</p>
-					<div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden" role="meter" aria-label="RAM used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${ramPercent}">
-						<div class="h-full rounded-full bg-Primary2" style="width: ${ramPercent}%"></div>
-					</div>
-					<p><strong>Uptime:</strong> ${uptimeHours} hours</p>
-				`;
-			} catch (err) {
-				bodyEl.textContent = 'Could not load stats right now.';
-			}
-		}
-
-		trigger.addEventListener('click', (e) => {
-			e.preventDefault();
-			modal.classList.remove('hidden');
-			loadStats();
-		});
-
-		closeBtn.addEventListener('click', () => {
-			modal.classList.add('hidden');
-		});
-
-		modal.addEventListener('click', (e) => {
-			if (e.target === modal) modal.classList.add('hidden');
-		});
-	});
+	const root = document.querySelector<HTMLElement>('[data-live-stats]');
+	if (root) initLiveStats(root);
 </script>
 
 <style>
-	/* Prevent horizontal overflow from animated triangle */
-	.hero-root {
-		overflow-x: hidden;
+	.hero {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		background: var(--color-night);
+		color: var(--color-ink);
+		font-family: var(--font-Display2);
 	}
 
-	.pi-modal:not(.hidden) {
+	/* Drifting colour fields behind everything */
+	.hero__blob {
+		position: absolute;
+		inset: -30%;
+		z-index: -2;
+		will-change: transform;
+		pointer-events: none;
+	}
+
+	.hero__blob--a {
+		background: radial-gradient(circle at 30% 35%, rgba(92, 200, 232, 0.28) 0%, rgba(92, 200, 232, 0.1) 35%, rgba(92, 200, 232, 0) 65%);
+		animation: drift-a 28s ease-in-out infinite alternate;
+	}
+
+	.hero__blob--b {
+		background: radial-gradient(circle at 72% 68%, rgba(110, 123, 242, 0.24) 0%, rgba(110, 123, 242, 0.08) 38%, rgba(110, 123, 242, 0) 68%);
+		animation: drift-b 36s ease-in-out infinite alternate;
+	}
+
+	.hero__blob--c {
+		background: radial-gradient(circle at 55% 15%, rgba(6, 22, 79, 0.85) 0%, rgba(6, 22, 79, 0.35) 40%, rgba(6, 22, 79, 0) 72%);
+		animation: drift-c 44s ease-in-out infinite alternate;
+	}
+
+	.hero__grain {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		opacity: 0.15;
+		mix-blend-mode: soft-light;
+		background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+		background-size: 120px 120px;
+	}
+
+	/* Fade the colour fields out so the hero blends into the page below */
+	.hero::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 0;
+		height: 140px;
+		z-index: -1;
+		pointer-events: none;
+		background: linear-gradient(to bottom, transparent, var(--color-night));
+	}
+
+	@keyframes drift-a {
+		from { transform: translate3d(-4%, -2%, 0) scale(1); }
+		to { transform: translate3d(5%, 4%, 0) scale(1.12); }
+	}
+
+	@keyframes drift-b {
+		from { transform: translate3d(3%, 4%, 0) scale(1.08); }
+		to { transform: translate3d(-5%, -3%, 0) scale(1); }
+	}
+
+	@keyframes drift-c {
+		from { transform: translate3d(2%, -3%, 0) scale(1); }
+		to { transform: translate3d(-3%, 3%, 0) scale(1.1); }
+	}
+
+	/* Mobile first: intro on top, widgets below in two columns */
+	.layout {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-areas:
+			'intro intro'
+			'toolbox toolbox'
+			'status status'
+			'cpu mem'
+			'net net'
+			'load load'
+			'up ctr';
+		gap: 12px;
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 40px 16px 48px;
+	}
+
+	@media (min-width: 1024px) {
+		.layout {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			grid-template-rows: auto 176px auto 176px;
+			grid-template-areas:
+				'status status status status'
+				'cpu mem net net'
+				'intro intro intro toolbox'
+				'load load up ctr';
+			gap: 16px;
+			padding: 24px 32px 40px;
+		}
+	}
+
+	/* No data at all: drop the widgets and let the intro stand alone */
+	.hero[data-state='offline'] .tile,
+	.hero[data-state='offline'] .status {
+		display: none;
+	}
+
+	.status {
 		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 10px;
+		padding-top: 8px;
+		font: 500 12px/1 var(--font-Mono);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	.updated {
+		margin-left: auto;
+		letter-spacing: 0.04em;
+		text-transform: none;
+	}
+
+	/* A bright band sweeps across "LIVE" every few seconds */
+	.live {
+		font-weight: 700;
+		color: transparent;
+		background: linear-gradient(90deg, var(--color-accent) 0 40%, #ffffff 50%, var(--color-accent) 60% 100%);
+		background-size: 300% 100%;
+		background-position: 100% 0;
+		-webkit-background-clip: text;
+		background-clip: text;
+		animation: live-sweep 5s ease-in-out infinite;
+	}
+
+	.hero[data-state='stale'] .live {
+		background: none;
+		color: var(--color-ink-muted);
+		animation: none;
+		filter: none;
+	}
+
+	@keyframes live-sweep {
+		0% { background-position: 100% 0; filter: drop-shadow(0 0 0 rgba(92, 200, 232, 0)); }
+		15% { filter: drop-shadow(0 0 6px rgba(92, 200, 232, 0.8)); }
+		30%, 100% { background-position: 0 0; filter: drop-shadow(0 0 0 rgba(92, 200, 232, 0)); }
+	}
+
+	/* Widgets */
+	.tile {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		min-width: 0;
+		min-height: 150px;
+		padding: 16px 18px;
+		border-radius: 16px;
+		background: color-mix(in srgb, var(--color-panel) 78%, transparent);
+		border: 1px solid var(--color-line);
+		transition: opacity 300ms;
+	}
+
+	.hero[data-state='loading'] .tile {
+		opacity: 0.6;
+	}
+
+	.tile header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	.tile h2 {
+		margin: 0;
+		font: 500 12px/1 var(--font-Mono);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	.value {
+		font: 600 18px/1 var(--font-Mono);
+		color: var(--color-ink);
+	}
+
+	.value small,
+	.big small {
+		font-size: 12px;
+		font-weight: 500;
+		color: var(--color-ink-muted);
+	}
+
+	.tile :global(.chart) {
+		flex: 1;
+	}
+
+	.sub {
+		margin: 0;
+		font: 500 12px/1 var(--font-Mono);
+		color: var(--color-ink-muted);
+	}
+
+	.big {
+		margin: auto 0 0;
+		font: 600 clamp(28px, 3vw, 40px)/1 var(--font-Mono);
+		color: var(--color-ink);
+	}
+
+	.legend {
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+		font: 500 12px/1 var(--font-Mono);
+		color: var(--color-ink-muted);
+	}
+
+	.legend b {
+		color: var(--color-ink);
+		font-size: 15px;
+	}
+
+	.key::before {
+		content: '';
+		display: inline-block;
+		width: 14px;
+		margin-right: 6px;
+		vertical-align: middle;
+		border-top: 2px solid var(--color-accent);
+	}
+
+	.key.s2::before {
+		border-top: 2px dashed var(--color-accent-2);
+	}
+
+	.cdots {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+	}
+
+	.cdots :global(.cdot) {
+		width: 8px;
+		height: 8px;
+		border-radius: 2px;
+		background: var(--color-accent);
+	}
+
+	.cdots :global(.cdot:nth-child(3n)) {
+		background: var(--color-accent-2);
+	}
+
+	/* Intro */
+	.intro {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 18px;
+		padding: 8px 0 16px;
+	}
+
+	@media (min-width: 1024px) {
+		.intro {
+			padding: 12px 48px 12px 4px;
+		}
+	}
+
+	.eyebrow {
+		margin: 0;
+		font: 600 clamp(18px, 1.8vw, 24px)/1.1 var(--font-Mono);
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	h1 {
+		margin: 0;
+		font-weight: 600;
+		font-size: clamp(2rem, 3.8vw, 3.2rem);
+		line-height: 1.08;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.lede {
+		margin: 0;
+		max-width: 62ch;
+		font-size: clamp(1rem, 1.3vw, 1.15rem);
+		line-height: 1.6;
+		color: var(--color-ink-muted);
+	}
+
+	.cta-row {
+		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
+		gap: 12px;
+		margin-top: 4px;
+	}
+
+	.divider {
+		width: 1px;
+		height: 28px;
+		margin: 0 4px;
+		background: var(--color-line);
+	}
+
+	/* On narrow screens the icons wrap to their own line, so the divider would dangle */
+	@media (max-width: 479px) {
+		.divider {
+			display: none;
+		}
+	}
+
+	.toolbox-wrap {
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
 	}
 
-	/* Triangle animation: slide in from left, fade in, and rotate into position */
-	.triangle-animate {
-		animation: triangleSlide 1.2s ease-out forwards;
-		opacity: 0;
-		transform: translateX(-100px) rotate(-25deg);
-	}
+	@media (prefers-reduced-motion: reduce) {
+		.hero__blob,
+		.live {
+			animation: none;
+		}
 
-	@keyframes triangleSlide {
-		0% {
-			opacity: 0;
-			transform: translateX(-100px) rotate(-360deg);
-		}
-		100% {
-			opacity: 1;
-			transform: translateX(0) rotate(0deg);
-		}
-	}
-
-	/* Divider line grow animation */
-	.divider-grow {
-		width: 0;
-		animation: growWidth 0.8s ease-out forwards;
-		animation-delay: 1.5s; /* Start after text finishes */
-	}
-
-	@keyframes growWidth {
-		from {
-			width: 0;
-		}
-		to {
-			width: 300px; /* w-75 equivalent */
-		}
 	}
 </style>
