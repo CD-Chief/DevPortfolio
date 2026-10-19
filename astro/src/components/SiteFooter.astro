@@ -1,0 +1,17 @@
+---
+import Socials from './Socials.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line">
+	<div class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+		<div class="flex flex-col gap-2">
+			<p class="text-lg font-semibold text-ink">Thanks for visiting.</p>
+			<p class="font-Mono text-xs text-ink-muted">
+				© {year} Chief-Daniel Osei · Built with Astro, served from my own VPS
+			</p>
+		</div>
+		<Socials />
+	</div>
+</footer>

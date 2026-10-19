@@ -1,8 +1,9 @@
 ---
-import { render } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
+import TagList from './TagList.astro';
 
 interface Props {
-  projects: any[];
+  projects: CollectionEntry<'projects'>[];
 }
 
 const { projects } = Astro.props;
@@ -12,6 +13,7 @@ const renderedProjects = await Promise.all(
     const { Content } = await render(project);
     return {
       id: project.data.id,
+      tech: project.data.tech,
       Content,
     };
   })
@@ -21,17 +23,17 @@ const renderedProjects = await Promise.all(
 <!-- Modal container (hidden by default) -->
 <div id="projectModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
   <!-- Backdrop -->
-  <div id="modalBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  <div id="modalBackdrop" class="absolute inset-0 bg-night/80 backdrop-blur-sm"></div>
   
   <!-- Modal content -->
-  <div id="modalContent" class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden z-10 flex flex-col">
+  <div id="modalContent" class="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl">
     <!-- Header -->
-    <div class="shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-      <h2 id="modalTitle" class="text-2xl font-Display1 text-Neutral-Dark"></h2>
+    <div class="flex shrink-0 items-center justify-between border-b border-line px-6 py-4">
+      <h2 id="modalTitle" class="text-2xl font-semibold text-ink"></h2>
       <button 
         type="button"
         id="closeModal"
-        class="text-gray-500 hover:text-Neutral-Dark transition-colors p-2 rounded-lg hover:bg-gray-100"
+        class="rounded-lg p-2 text-ink-muted transition-colors hover:bg-panel-raised hover:text-ink"
         aria-label="Close modal"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,11 +47,11 @@ const renderedProjects = await Promise.all(
       {renderedProjects.map((project) => {
         const Content = project.Content;
         return (
-          <div 
-            class="project-content hidden prose prose-lg max-w-none" 
-            data-project-id={project.id}
-          >
-            <Content />
+          <div class="project-content hidden" data-project-id={project.id}>
+            <TagList tags={project.tech} class="mb-6" />
+            <div class="prose prose-lg prose-invert prose-site max-w-none">
+              <Content />
+            </div>
           </div>
         );
       })}

@@ -1,5 +1,15 @@
 ---
 import "../styles/global.css"
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+	title?: string;
+	// The homepage hero carries its own intro, so it skips the top nav
+	header?: boolean;
+}
+
+const { title = 'Chief-Daniel Osei | Portfolio', header = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -7,13 +17,18 @@ import "../styles/global.css"
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<meta name="theme-color" content="#0d0c1a" />
 		<link rel="icon" type="image/svg+xml" href="/cIconFlat.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Chief-Daniel Osei | Portfolio</title>
+		<title>{title}</title>
 		<script defer src="https://analytics.chiefosei.dev/script.js" data-website-id="870b8dfd-2bed-4142-ab92-887116583cf7"></script>
 	</head>
 	<body>
-		<slot />
+		{header && <SiteHeader />}
+		<main>
+			<slot />
+		</main>
+		<SiteFooter />
 	</body>
 </html>
 
@@ -22,6 +37,6 @@ import "../styles/global.css"
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 	}
 </style>
