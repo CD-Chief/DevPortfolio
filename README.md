@@ -14,6 +14,7 @@ This portfolio showcases my projects, technical skills, and development journey.
 - **Content Collections**: Type-safe project data with schema validation
 - **Optimized Images**: Automatic WebP generation and lazy loading via `astro:assets`
 - **Responsive Design**: Mobile-first approach with fluid typography and layouts
+- **Live Server Stats**: CPU, memory, load and per-container stats from Beszel in the hero
 - **Interactive Elements**: Project modals, filtering, and smooth animations
 - **Performance-First**: Optimized LCP, CLS, and TBT scores
 - **Self-Hosted**: Running on an IONOS VPS
@@ -121,13 +122,31 @@ Edit `src/data/skills.json` to add or modify skill entries.
 
 ## 📊 Live System Stats
 
-The site includes a live stats modal (the server icon on the homepage) that shows metrics from the server running the container:
-- CPU usage
-- RAM usage
-- System load averages
-- Uptime
+The homepage hero shows live stats from the VPS running the site: CPU and load average (1m, 5m, 15m) as 24h charts, a memory ring, the top containers by memory, network rate and 24h traffic, uptime, and container health.
 
-The data comes from `GET /api/server-stats.json`, which runs on every request and caches results for 5 seconds. Values reflect the host kernel, so inside a container they show the host's numbers.
+Container names are never sent as-is. [`src/data/containers.ts`](astro/src/data/containers.ts) maps container names or images to display labels (e.g. everything Prometheus/Grafana becomes "Monitoring"); anything not listed there is folded into "Other", so client or personal projects stay private.
+
+The data comes from [Beszel](https://beszel.dev). The browser only ever calls `GET /api/stats.json` on this site; that route logs in to the Beszel hub server-side, reads the system's latest stats and 24h history, and returns only a whitelisted set of fields. The hub URL and credentials never reach the browser.
+
+- Results are cached in memory for 45 seconds, and concurrent requests share one hub call
+- If the hub fails, the last good reading is served and marked stale (the "LIVE" label turns grey)
+- With no reading at all, the route returns `503` and the homepage hides the widgets
+- Under `astro dev` with no hub configured, the route serves mock data so the layout can be worked on
+
+### Configuration
+
+Set these environment variables (in Coolify for production). They are read at runtime via `astro:env`, so they are not baked into the build or the image.
+
+| Variable | Description |
+| --- | --- |
+| `BESZEL_URL` | Hub URL, e.g. `https://beszel.example.com` |
+| `BESZEL_EMAIL` | Login of a dedicated Beszel user |
+| `BESZEL_PASSWORD` | That user's password |
+| `BESZEL_SYSTEM` | System name exactly as shown in Beszel |
+
+Create the user in Beszel with the **readonly** role and assign it only to this system. Beszel's access rules then let it read `systems`, `system_stats` and `containers` for that system and nothing else, with no write access.
+
+See [`.env.example`](.env.example). Copy it to `.env` for `docker compose`, or to `astro/.env` for `astro dev`. Both are git-ignored; never commit real values.
 
 ## 🚀 CI/CD
 
@@ -139,7 +158,7 @@ Runs on pull requests to `main` and `dev`:
 1. Installs dependencies, then builds the Astro site (fails fast before Docker)
 2. Builds the Docker image from the `Dockerfile`
 3. Starts the container and waits for `/api/health` to return 200
-4. Checks `/`, `/projects`, `/api/health`, and `/api/server-stats.json` return 200
+4. Checks `/`, `/projects`, `/blog` and `/api/health` return 200, and `/api/stats.json` returns 200 or 503 (503 is expected with no Beszel credentials)
 5. Prints container logs on failure, then removes the container
 
 Lint and test steps are commented out until those scripts exist.
