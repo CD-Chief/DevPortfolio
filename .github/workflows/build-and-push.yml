@@ -17,7 +17,6 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/cd-chief/dev-portfolio
-  COOLIFY_URL: https://server.chiefosei.dev
 
 jobs:
   build-and-push:
@@ -61,12 +60,46 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # One Coolify resource per branch, stored as repo secrets
-      - name: Redeploy on Coolify
+      # Deploy by tag: the apps in Coolify carry the tag, so no resource IDs are stored here.
+      # dev -> <repo>-staging, main -> <repo>-production (repo name lowercased)
+      - name: Resolve deploy target
+        id: target
         env:
+          COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
-          COOLIFY_UUID: ${{ github.ref_name == 'main' && secrets.COOLIFY_UUID_MAIN || secrets.COOLIFY_UUID_DEV }}
         run: |
-          curl -fsS -X POST \
+          repo="${GITHUB_REPOSITORY#*/}"
+          repo="${repo,,}"
+          if [ "$GITHUB_REF_NAME" = "main" ]; then env_name=production; else env_name=staging; fi
+          tag="${repo}-${env_name}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Expected Coolify tag: $tag"
+          if [ -n "$COOLIFY_URL" ] && [ -n "$COOLIFY_TOKEN" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::COOLIFY_URL or COOLIFY_TOKEN is not set, so the image was pushed but not deployed"
+          fi
+
+      # Explicit POST, response written to a file and printed, any non-2xx fails the job.
+      # Plain curl fail mode would hide the response body that explains why.
+      - name: Deploy on Coolify
+        if: steps.target.outputs.deploy == 'true'
+        env:
+          COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          DEPLOY_TAG: ${{ steps.target.outputs.tag }}
+        run: |
+          code=$(curl -sS -X POST \
             -H "Authorization: Bearer $COOLIFY_TOKEN" \
-            "$COOLIFY_URL/api/v1/deploy?uuid=$COOLIFY_UUID&force=false"
+            -H "Accept: application/json" \
+            -o response.json -w "%{http_code}" \
+            "${COOLIFY_URL%/}/api/v1/deploy?tag=${DEPLOY_TAG}&force=false")
+          echo "Deploy tag: $DEPLOY_TAG"
+          echo "HTTP $code"
+          cat response.json
+          echo
+          case "$code" in
+            2??) ;;
+            *) echo "Deploy request failed"; exit 1 ;;
+          esac

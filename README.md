@@ -168,19 +168,31 @@ Lint and test steps are commented out until those scripts exist.
 Runs on pushes to `main` and `dev`, and can be started manually from the Actions tab:
 1. Builds the production image and pushes it to GHCR
 2. Tags each image with the branch name (`main` or `dev`, a moving tag) and with the branch plus short commit SHA (`main-<sha>`, one per commit)
-3. Calls the Coolify deploy API (`POST /api/v1/deploy`) to redeploy the resource for that branch
+3. Calls the Coolify deploy API (`POST /api/v1/deploy?tag=...`) to redeploy every Coolify app carrying the matching tag
 
 Concurrent runs on the same branch cancel the older run.
+
+**Deploy by tag.** The workflow never stores Coolify resource IDs. It derives a tag from the repo name (lowercased) and the branch, and Coolify deploys every app that carries that tag:
+
+| Branch | Tag |
+|--------|-----|
+| `main` | `devportfolio-production` |
+| `dev` | `devportfolio-staging` |
+
+Assign the same string to the matching app in Coolify (Configuration, Tags). A typo means the deploy hits nothing. Keep tags unique per site.
+
+The workflow logs the expected tag on every run, then the HTTP status and response body of the deploy call, and fails on any non-2xx response. The deploy step skips itself (with a warning) until both secrets below exist, so a first push only builds the image.
 
 **Required repository secrets:**
 
 | Secret | Purpose |
 |--------|---------|
-| `COOLIFY_TOKEN` | Coolify API token, sent as a Bearer token |
-| `COOLIFY_UUID_MAIN` | Coolify resource UUID for the `main` deployment |
-| `COOLIFY_UUID_DEV` | Coolify resource UUID for the `dev` deployment |
+| `COOLIFY_URL` | Coolify address, e.g. `https://server.chiefosei.dev` |
+| `COOLIFY_TOKEN` | Coolify API token with the deploy permission only |
 
-`GITHUB_TOKEN` handles GHCR login and needs no setup. The Coolify address is set as `COOLIFY_URL` in the `env` block at the top of `build-and-push.yml`, since it isn't sensitive.
+`GITHUB_TOKEN` handles GHCR login and needs no setup. There are no build-time variables: the Beszel settings are runtime env vars on each Coolify app, so one image serves both environments.
+
+The old `COOLIFY_UUID_MAIN` and `COOLIFY_UUID_DEV` secrets are no longer used and can be deleted.
 
 ### Health Checks
 
@@ -199,8 +211,8 @@ Set `HOST=0.0.0.0` (already set in the `Dockerfile`) so the server accepts conne
 ## ↩️ Rollback
 
 Rollback is manual:
-1. Find the last known-good image tag in GHCR, e.g. `ghcr.io/cd-chief/dev-portfolio:main-<sha>`
-2. In Coolify, point the resource at that tag, or redeploy with that tag
+1. Find the last known-good SHA-tagged image in GHCR, e.g. `ghcr.io/cd-chief/dev-portfolio:main-<sha>` (the moving `main` tag is not a rollback target)
+2. In Coolify, point the app at that SHA tag and redeploy
 3. Check `/api/health` and the homepage
 4. Once stable, revert the bad commit or fix forward before the next normal deploy
 
