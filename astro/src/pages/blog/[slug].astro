@@ -30,7 +30,7 @@ const relatedProjectIds = post.data.relatedProjects ?? [];
 const relatedProjects = allProjects.filter((project) => relatedProjectIds.includes(project.data.id));
 ---
 
-<Layout title={`${post.data.title} | Chief-Daniel Osei`}>
+<Layout title={`${post.data.title} | Chief-Daniel Osei`} description={post.data.excerpt} type="article">
   <article class="mx-auto max-w-3xl px-4 pb-10 pt-4 sm:px-8">
     <a href="/blog" class="link-arrow">← All posts</a>
 

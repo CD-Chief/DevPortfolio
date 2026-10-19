@@ -5,11 +5,21 @@ import SiteFooter from '../components/SiteFooter.astro';
 
 interface Props {
 	title?: string;
+	description?: string;
+	type?: 'website' | 'article';
 	// The homepage hero carries its own intro, so it skips the top nav
 	header?: boolean;
 }
 
-const { title = 'Chief-Daniel Osei | Portfolio', header = true } = Astro.props;
+const {
+	title = 'Chief-Daniel Osei | DevOps & Cloud Infrastructure',
+	description = 'Chief-Daniel Osei builds and runs the infrastructure behind real websites: reproducible environments, CI/CD and monitoring. Based in Duisburg, Germany.',
+	type = 'website',
+	header = true,
+} = Astro.props;
+
+// Match the links used across the site: no trailing slash except on the homepage
+const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
 ---
 
 <!doctype html>
@@ -21,6 +31,16 @@ const { title = 'Chief-Daniel Osei | Portfolio', header = true } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/cIconFlat.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="author" content="Chief-Daniel Osei" />
+		<link rel="canonical" href={canonical} />
+
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content="Chief-Daniel Osei" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary" />
 		<script defer src="https://analytics.chiefosei.dev/script.js" data-website-id="870b8dfd-2bed-4142-ab92-887116583cf7"></script>
 	</head>
 	<body>

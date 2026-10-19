@@ -4,6 +4,8 @@ import node from '@astrojs/node';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  // Used for canonical and Open Graph URLs
+  site: 'https://chiefosei.dev',
   // Standalone Node server. Pages stay static; only routes with prerender = false run on demand.
   adapter: node({ mode: 'standalone' }),
   // Server-only secrets, read at runtime (not inlined at build time). All optional:
