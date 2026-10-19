@@ -59,10 +59,10 @@ import Socials from './Socials.astro';
 			</p>
 
 			<div class="cta-row">
-				<a href="#projects" class="btn btn-primary">See my projects</a>
-				<a href="mailto:chief.d.osei@gmail.com" class="btn btn-ghost">Get in touch</a>
+				<a href="#projects" class="btn btn-primary" data-umami-event="cta-click" data-umami-event-place="hero-projects">See my projects</a>
+				<a href="mailto:chief.d.osei@gmail.com" class="btn btn-ghost" data-umami-event="contact-click" data-umami-event-channel="email" data-umami-event-place="hero">Get in touch</a>
 				<span class="divider" aria-hidden="true"></span>
-				<Socials />
+				<Socials place="hero" />
 			</div>
 		</div>
 

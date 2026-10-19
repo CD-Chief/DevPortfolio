@@ -2,6 +2,7 @@
 import "../styles/global.css"
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { UMAMI } from '../data/analytics';
 
 interface Props {
 	title?: string;
@@ -18,6 +19,11 @@ const {
 	header = true,
 } = Astro.props;
 
+// Pages are prerendered, so a runtime env flag would be frozen at build time. Instead the script is
+// left out of `astro dev` and restricted to the production hostname: the tracker ignores any other
+// host (staging, previews, localhost), so only chiefosei.dev is ever counted.
+const analyticsDomain = Astro.site ? Astro.site.hostname : undefined;
+const trackAnalytics = import.meta.env.PROD && Boolean(analyticsDomain);
 // Match the links used across the site: no trailing slash except on the homepage
 const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
 ---
@@ -41,7 +47,9 @@ const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={canonical} />
 		<meta name="twitter:card" content="summary" />
-		<script defer src="https://analytics.chiefosei.dev/script.js" data-website-id="870b8dfd-2bed-4142-ab92-887116583cf7"></script>
+		{trackAnalytics && (
+			<script is:inline defer src={UMAMI.scriptUrl} data-website-id={UMAMI.websiteId} data-domains={analyticsDomain} />
+		)}
 	</head>
 	<body>
 		{header && <SiteHeader />}

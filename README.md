@@ -14,6 +14,7 @@ This portfolio showcases my projects, technical skills, and development journey.
 - **Content Collections**: Type-safe project data with schema validation
 - **Optimized Images**: Automatic WebP generation and lazy loading via `astro:assets`
 - **Responsive Design**: Mobile-first approach with fluid typography and layouts
+- **Analytics**: Cookieless self-hosted Umami with a few click events
 - **Live Server Stats**: CPU, memory, load and per-container stats from Beszel in the hero
 - **Interactive Elements**: Project modals, filtering, and smooth animations
 - **Performance-First**: Optimized LCP, CLS, and TBT scores
@@ -147,6 +148,32 @@ Set these environment variables (in Coolify for production). They are read at ru
 Create the user in Beszel with the **readonly** role and assign it only to this system. Beszel's access rules then let it read `systems`, `system_stats` and `containers` for that system and nothing else, with no write access.
 
 See [`.env.example`](.env.example). Copy it to `.env` for `docker compose`, or to `astro/.env` for `astro dev`. Both are git-ignored; never commit real values.
+
+## 📈 Analytics
+
+The site uses a self-hosted, cookieless [Umami](https://umami.is) instance at `analytics.chiefosei.dev`. Page views are tracked automatically; a small set of click events is added with data attributes.
+
+- **Config:** the script URL and website ID are public, so they live in [`src/data/analytics.ts`](astro/src/data/analytics.ts). The script tag is rendered in [`Layout.astro`](astro/src/layouts/Layout.astro).
+- **Production only:** the script is left out of `astro dev`, and the tag carries `data-domains` set to the hostname of `site` in `astro.config.mjs`. The tracker ignores every other hostname, so staging, previews and localhost are never counted. Pages are prerendered, so a runtime environment flag would be frozen at build time; the domain allowlist is what enforces this in the browser.
+- **No JavaScript needed:** events are `data-umami-event` attributes on the clickable element. They do nothing when the script is absent.
+
+### Events
+
+| Event | Fires when | Properties | Where |
+|-------|------------|------------|-------|
+| `cta-click` | "See my projects" is clicked | `place`: `hero-projects` | `Hero.astro` |
+| `contact-click` | A contact link is clicked | `channel`: `email`, `linkedin`, `github`; `place`: `header`, `hero`, `footer` | `SiteHeader.astro`, `Hero.astro`, `Socials.astro` |
+| `project-open` | "Read more" on a project card is clicked | `item`: project title | `ProjectCard.astro` |
+| `project-link` | "View live" on a project card is clicked | `item`: project title | `ProjectCard.astro` |
+
+### Adding an event
+
+1. Put `data-umami-event="event-name"` on the clickable element, plus optional `data-umami-event-<key>="value"` properties.
+2. Name events short and kebab-case, noun-verb style. Use one event name with properties instead of one name per button (`cta-click` with `place`, not `cta-click-header`).
+3. Keep property values to a small fixed set, and never put personal data in them (no names, emails or free text).
+4. Update the table above.
+
+To check events, open Umami and use Realtime for visits and the Events tab for custom events and their property breakdowns. Test from the real domain, since the domains attribute blocks other hosts.
 
 ## 🚀 CI/CD
 

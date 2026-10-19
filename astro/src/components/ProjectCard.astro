@@ -45,13 +45,15 @@ const hasLink = link && link !== '#';
             type="button"
             data-project-id={projectId}
             data-project-title={name}
+            data-umami-event="project-open"
+            data-umami-event-item={name}
             class="project-modal-trigger btn btn-ghost btn-sm"
           >
             Read more
           </button>
         )}
         {hasLink && (
-          <a href={link} target="_blank" rel="noopener noreferrer" class="link-arrow">
+          <a href={link} target="_blank" rel="noopener noreferrer" class="link-arrow" data-umami-event="project-link" data-umami-event-item={name}>
             View live ↗
           </a>
         )}
