@@ -26,11 +26,23 @@ const relatedPosts = relatedPostSlugs
   .map((slug) => allPosts.find((p) => (p.data.slug ?? slugify(p.data.title)) === slug))
   .filter((relatedPost): relatedPost is (typeof allPosts)[number] => Boolean(relatedPost));
 
+const postUrl = new URL(`/blog/${post.data.slug ?? slugify(post.data.title)}`, Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.excerpt,
+  datePublished: post.data.publishedAt,
+  image: new URL(post.data.coverImage.src, Astro.site).href,
+  mainEntityOfPage: postUrl,
+  author: { '@type': 'Person', name: 'Chief-Daniel Osei', url: Astro.site?.href },
+};
+
 const relatedProjectIds = post.data.relatedProjects ?? [];
 const relatedProjects = allProjects.filter((project) => relatedProjectIds.includes(project.data.id));
 ---
 
-<Layout title={`${post.data.title} | Chief-Daniel Osei`} description={post.data.excerpt} type="article">
+<Layout title={`${post.data.title} | Chief-Daniel Osei`} description={post.data.excerpt} type="article" jsonLd={jsonLd}>
   <article class="mx-auto max-w-3xl px-4 pb-10 pt-4 sm:px-8">
     <a href="/blog" class="link-arrow">← All posts</a>
 

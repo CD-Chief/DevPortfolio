@@ -149,6 +149,14 @@ Create the user in Beszel with the **readonly** role and assign it only to this 
 
 See [`.env.example`](.env.example). Copy it to `.env` for `docker compose`, or to `astro/.env` for `astro dev`. Both are git-ignored; never commit real values.
 
+## 🔎 SEO
+
+- **Sitemap:** `@astrojs/sitemap` writes `sitemap-index.xml` at build time from the prerendered pages (API routes excluded). URLs have no trailing slash, matching the canonical tags. `public/robots.txt` points to it and disallows `/api/`.
+- **Head tags:** [`Layout.astro`](astro/src/layouts/Layout.astro) sets a per-page title, description, canonical URL, Open Graph and Twitter tags, and favicons from `public/`. The site URL comes from `site` in `astro.config.mjs`.
+- **Structured data:** the homepage emits `WebSite` and `Person` JSON-LD, and each post emits `BlogPosting`. Pass a `jsonLd` prop to the layout to add more.
+- **Preview image:** `public/og-image.png` (1200x630) is used for link previews. It is a screenshot of a small HTML page in the site's style, so regenerate it if the headline changes.
+- **404 page:** `src/pages/404.astro`, marked `noindex`.
+
 ## 📈 Analytics
 
 The site uses a self-hosted, cookieless [Umami](https://umami.is) instance at `analytics.chiefosei.dev`. Page views are tracked automatically; a small set of click events is added with data attributes.

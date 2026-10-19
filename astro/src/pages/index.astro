@@ -3,9 +3,29 @@ import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
 import Posts from '../components/Posts.astro';
 import Layout from '../layouts/Layout.astro';
+
+const site = 'https://chiefosei.dev';
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'Chief-Daniel Osei',
+		url: site,
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		name: 'Chief-Daniel Osei',
+		url: site,
+		image: `${site}/og-image.png`,
+		description: 'Builds and runs the infrastructure behind real websites: reproducible environments, CI/CD and monitoring.',
+		address: { '@type': 'PostalAddress', addressLocality: 'Duisburg', addressCountry: 'DE' },
+		sameAs: ['https://www.linkedin.com/in/chief-daniel', 'https://github.com/CD-Chief'],
+	},
+];
 ---
 
-<Layout header={false}>
+<Layout header={false} jsonLd={jsonLd}>
 	<Hero />
 	<Projects />
 	<Posts />
