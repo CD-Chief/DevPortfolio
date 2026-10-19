@@ -8,6 +8,10 @@ interface Props {
 	title?: string;
 	description?: string;
 	type?: 'website' | 'article';
+	// Structured data (schema.org) for this page
+	jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+	// Keep a page out of search results (e.g. the 404 page)
+	noindex?: boolean;
 	// The homepage hero carries its own intro, so it skips the top nav
 	header?: boolean;
 }
@@ -16,6 +20,8 @@ const {
 	title = 'Chief-Daniel Osei | DevOps & Cloud Infrastructure',
 	description = 'Chief-Daniel Osei builds and runs the infrastructure behind real websites: reproducible environments, CI/CD and monitoring. Based in Duisburg, Germany.',
 	type = 'website',
+	jsonLd,
+	noindex = false,
 	header = true,
 } = Astro.props;
 
@@ -25,6 +31,7 @@ const {
 const analyticsDomain = Astro.site ? Astro.site.hostname : undefined;
 const trackAnalytics = import.meta.env.PROD && Boolean(analyticsDomain);
 // Match the links used across the site: no trailing slash except on the homepage
+const ogImage = new URL('/og-image.png', Astro.site);
 const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
 ---
 
@@ -34,11 +41,18 @@ const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="theme-color" content="#0d0c1a" />
-		<link rel="icon" type="image/svg+xml" href="/cIconFlat.svg" />
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="Chief Osei" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<meta name="author" content="Chief-Daniel Osei" />
+		{noindex && <meta name="robots" content="noindex" />}
 		<link rel="canonical" href={canonical} />
 
 		<meta property="og:type" content={type} />
@@ -46,7 +60,16 @@ const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={canonical} />
-		<meta name="twitter:card" content="summary" />
+		<meta property="og:locale" content="en_GB" />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Chief-Daniel Osei: I build and run the infrastructure behind real websites." />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\u003c')} />}
 		{trackAnalytics && (
 			<script is:inline defer src={UMAMI.scriptUrl} data-website-id={UMAMI.websiteId} data-domains={analyticsDomain} />
 		)}
