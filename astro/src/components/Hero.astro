@@ -176,15 +176,15 @@ import Socials from './Socials.astro';
 		to { transform: translate3d(-3%, 3%, 0) scale(1.1); }
 	}
 
-	/* Mobile first: intro on top, widgets below in two columns */
+	/* Mobile first: CPU and memory lead, then the intro, then the remaining widgets */
 	.layout {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		grid-template-areas:
-			'intro intro'
-			'toolbox toolbox'
 			'status status'
 			'cpu mem'
+			'intro intro'
+			'toolbox toolbox'
 			'net net'
 			'load load'
 			'up ctr';
