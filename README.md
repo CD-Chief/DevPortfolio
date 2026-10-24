@@ -113,8 +113,12 @@ summary: "Project description"
 
 1. Add project images to `src/assets/projects/`
 2. Create a new markdown file in `src/content/projects/`
-3. Follow the schema defined in `src/content/config.ts`
-4. The project will automatically appear on the site
+3. Follow the schema in [`src/content.config.ts`](astro/src/content.config.ts). Technology names must come from [`src/data/tech.ts`](astro/src/data/tech.ts), and a misspelt one fails the build
+4. Optional fields control where it appears:
+   - `featured: 1` to `4` puts it on the homepage, in that order (lowest first, only the first four are shown)
+   - `year: "2025"` shows a year on the card; leave it off when unsure
+   - `archived: true` moves it to the "Earlier work" section at the bottom of `/projects`
+5. Projects with none of these still appear on `/projects`
 
 ### Updating Skills
 

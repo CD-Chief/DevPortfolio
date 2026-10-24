@@ -7,11 +7,11 @@ import SectionHeader from './SectionHeader.astro';
 // Get all projects from content collection
 const allProjects = await getCollection('projects');
 
-// Sort by id
-const sortedProjects = allProjects.sort((a, b) => a.data.id - b.data.id);
-
-// First 4 projects; phones only get the first 2
-const displayedProjects = sortedProjects.filter(project => project.data.id >= 1 && project.data.id <= 4);
+// Featured projects in rank order (see `featured` in the content schema); phones only get the first 2
+const displayedProjects = allProjects
+	.filter((project) => project.data.featured !== undefined && !project.data.archived)
+	.sort((a, b) => a.data.featured! - b.data.featured!)
+	.slice(0, 4);
 ---
 
 <section id="projects" class="mx-auto max-w-7xl scroll-mt-8 px-4 py-20 sm:px-8">
@@ -28,6 +28,7 @@ const displayedProjects = sortedProjects.filter(project => project.data.id >= 1 
 					showMoreButton={project.data.showMoreButton}
 					link={project.data.link}
 					projectId={project.data.id}
+					year={project.data.year}
 				/>
 			</div>
 		))}

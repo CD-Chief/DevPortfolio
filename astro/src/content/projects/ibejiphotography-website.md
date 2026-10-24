@@ -7,6 +7,7 @@ summary: "A multilingual, client-ready photography portfolio with a headless CMS
 link: "http://ibejiphotography.com"
 image: "../../assets/projects/IbejiGallery.png"
 showMoreButton: true
+featured: 2
 ---
 
 # Photography Portfolio Website

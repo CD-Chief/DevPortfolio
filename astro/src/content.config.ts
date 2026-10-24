@@ -15,6 +15,12 @@ const projectsCollection = defineCollection({
       summary: z.string(),
       link: z.string().optional(),
       showMoreButton: z.boolean().default(true),
+      // Free text, e.g. "2025" or "2025 - now". Left off when the year is not known.
+      year: z.string().optional(),
+      // Rank on the homepage (1 comes first); only the first four are shown. Unranked projects stay on /projects.
+      featured: z.number().int().positive().optional(),
+      // Shown in the "Earlier work" section on /projects instead of the main grid
+      archived: z.boolean().default(false),
     }),
 });
 
