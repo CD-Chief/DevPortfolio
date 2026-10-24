@@ -7,6 +7,7 @@ summary: "A security-focused Flask blog implementing encryption, MFA, role-based
 link: "#"
 image: "../../assets/projects/blog-login.png"
 showMoreButton: true
+featured: 4
 ---
 
 # Secure Blog Application

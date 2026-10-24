@@ -1,12 +1,13 @@
 --- 
 id: 5
-title: "This Portfolio Website"
+title: "Portfolio Website (Raspberry Pi version)"
 size: "M"
 tech: ["Astro", "Tailwind CSS", "TypeScript"]
 summary: "A modern, responsive portfolio website showcasing my skills and projects."
 link: "#"
 image: "../../assets/projects/ThisSite.png"
 showMoreButton: true
+archived: true
 ---
 
 # Portfolio Website

@@ -2,106 +2,105 @@
 import { getCollection } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
 import ProjectModal from './ProjectModal.astro';
+import SectionHeader from './SectionHeader.astro';
 
 // Get all projects from content collection
 const allProjects = await getCollection('projects');
 
-// Sort by id
-const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
+// Featured projects first in rank order, then the rest by id
+const rank = (p: (typeof allProjects)[number]) => p.data.featured ?? Infinity;
+const byRankThenId = (a: (typeof allProjects)[number], b: (typeof allProjects)[number]) =>
+	rank(a) === rank(b) ? a.data.id - b.data.id : rank(a) - rank(b);
+
+const projects = allProjects.filter((p) => !p.data.archived).sort(byRankThenId);
+const earlier = allProjects.filter((p) => p.data.archived).sort((a, b) => a.data.id - b.data.id);
 ---
 
-<section class="min-h-screen w-full flex items-center justify-center p-4 bg-Background1">
-	<!-- Centered container with curved edges and different background -->
-	<div class="w-full max-w-7xl h-auto min-h-[90vh] rounded-2xl p-4 sm:p-6 md:p-12 shadow-lg bg-Background2">
-		
-		<!-- Header with back button -->
-		<div class="flex items-center justify-between mb-8">
-			<a 
-				href="/" 
-				class="px-6 py-2 rounded-lg font-Display2 font-medium transition-all duration-300 bg-Primary2 text-white hover:-translate-y-0.5 hover:shadow-xl hover:opacity-90"
-			>
-				Home
-			</a>
-			<h2 class="text-4xl font-Display1 text-center flex-1 text-Neutral-Dark">All Projects</h2>
-			<div class="w-[100px]"></div> <!-- Spacer for centering -->
-		</div>
+<section class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-8">
+	<SectionHeader as="h1" eyebrow="Projects" title="Everything I've built">
+		<p class="max-w-2xl text-ink-muted">Client work, university projects and experiments. Filter by technology to narrow it down.</p>
+	</SectionHeader>
 
-		<!-- Filter Input -->
-		<div class="flex justify-center mb-12">
-			<input 
-				type="text" 
-				id="techFilter"
-				placeholder="Filter by technology (e.g., React, Python)..."
-				class="filter-input px-6 py-3 rounded-lg font-Display2 w-full max-w-md border-2 border-Neutral-Dark text-Neutral-Dark transition-all duration-300"
-			/>
-		</div>
-		
-		<!-- Projects Grid -->
-		<div id="projectsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
-			{projects.map((project) => (
-				<div class="project-card" data-technologies={project.data.tech.join(', ')}>
-					<ProjectCard
-						name={project.data.title}
-						size={project.data.size}
-						image={project.data.image}
-						technologies={project.data.tech}
-						description={project.data.summary}
-						showMoreButton={project.data.showMoreButton}
-						link={project.data.link}
-						projectId={project.data.id}
-					/>
-				</div>
-			))}
-		</div>
+	<label for="techFilter" class="sr-only">Filter projects by technology</label>
+	<input
+		type="search"
+		id="techFilter"
+		placeholder="Filter by technology (e.g. Docker, Python)"
+		class="field mb-10 max-w-md"
+	/>
 
+	<div id="projectsGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+		{projects.map((project) => (
+			<div class="project-card" data-technologies={project.data.tech.join(', ')}>
+				<ProjectCard
+					name={project.data.title}
+					image={project.data.image}
+					technologies={project.data.tech}
+					description={project.data.summary}
+					showMoreButton={project.data.showMoreButton}
+					link={project.data.link}
+					projectId={project.data.id}
+					year={project.data.year}
+				/>
+			</div>
+		))}
 	</div>
+
+	{earlier.length > 0 && (
+		<section id="earlierWork" class="mt-20" aria-labelledby="earlierWorkTitle">
+			<div class="mb-8 flex flex-col gap-2">
+				<h2 id="earlierWorkTitle" class="eyebrow">Earlier work</h2>
+				<p class="max-w-2xl text-sm text-ink-muted">Where I started. Kept to show the progression, not as current work.</p>
+			</div>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+				{earlier.map((project) => (
+					<div class="project-card" data-technologies={project.data.tech.join(', ')}>
+						<ProjectCard
+							compact
+							name={project.data.title}
+							technologies={project.data.tech}
+							description={project.data.summary}
+							showMoreButton={project.data.showMoreButton}
+							link={project.data.link}
+							projectId={project.data.id}
+							year={project.data.year}
+						/>
+					</div>
+				))}
+			</div>
+		</section>
+	)}
+
+	<p id="projectsEmpty" class="hidden py-12 text-center text-ink-muted">No projects use that yet.</p>
 </section>
 
 <!-- Modal for project details -->
 <ProjectModal projects={allProjects} />
 
-<style>
-	.filter-input {
-		outline: none;
-		background-color: white;
-	}
-
-	.filter-input:focus {
-		border-width: 3px;
-		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-	}
-
-	.filter-input::placeholder {
-		color: #9CA3AF;
-	}
-
-	.project-card {
-		transition: opacity 0.3s ease, transform 0.3s ease;
-	}
-
-	.project-card.hidden {
-		display: none;
-	}
-</style>
-
 <script>
 	const filterInput = document.getElementById('techFilter') as HTMLInputElement;
-	const projectsGrid = document.getElementById('projectsGrid');
 
-	if (filterInput && projectsGrid) {
+	if (filterInput) {
 		filterInput.addEventListener('input', (e) => {
 			const filterValue = (e.target as HTMLInputElement).value.toLowerCase().trim();
-			const projectCards = projectsGrid.querySelectorAll('[data-technologies]');
+			const projectCards = document.querySelectorAll('.project-card');
 
+			let shown = 0;
 			projectCards.forEach((card) => {
 				const technologies = card.getAttribute('data-technologies')?.toLowerCase() || '';
-				
-				if (filterValue === '' || technologies.includes(filterValue)) {
-					card.classList.remove('hidden');
-				} else {
-					card.classList.add('hidden');
-				}
+				const match = filterValue === '' || technologies.includes(filterValue);
+				card.classList.toggle('hidden', !match);
+				if (match) shown++;
 			});
+
+			// Hide the "Earlier work" heading when none of its cards match
+			const earlierSection = document.getElementById('earlierWork');
+			if (earlierSection) {
+				const anyVisible = earlierSection.querySelector('.project-card:not(.hidden)') !== null;
+				earlierSection.classList.toggle('hidden', !anyVisible);
+			}
+
+			document.getElementById('projectsEmpty')?.classList.toggle('hidden', shown > 0);
 		});
 	}
 </script>

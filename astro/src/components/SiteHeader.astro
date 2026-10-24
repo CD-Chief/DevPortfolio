@@ -1,0 +1,29 @@
+---
+const path = Astro.url.pathname;
+const links = [
+	{ href: '/projects', label: 'Projects' },
+	{ href: '/blog', label: 'Blog' },
+];
+---
+
+<header class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-8">
+	<a href="/" class="eyebrow text-base">Chief-Daniel Osei</a>
+	<nav aria-label="Main" class="flex items-center gap-1 text-sm font-medium">
+		{links.map((link) => {
+			const active = path.startsWith(link.href);
+			return (
+				<a
+					href={link.href}
+					aria-current={active ? 'page' : undefined}
+					class:list={[
+						'rounded-lg px-3 py-2 transition-colors hover:text-ink',
+						active ? 'bg-panel text-ink' : 'text-ink-muted',
+					]}
+				>
+					{link.label}
+				</a>
+			);
+		})}
+		<a href="mailto:chief.d.osei@gmail.com" class="btn btn-ghost btn-sm ml-2" data-umami-event="contact-click" data-umami-event-channel="email" data-umami-event-place="header">Contact</a>
+	</nav>
+</header>

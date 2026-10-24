@@ -4,8 +4,8 @@ slug: "why-i-started-this-blog"
 excerpt: "A short introduction to why I am writing more openly about my work, my DevOps focus, and the projects I am building."
 coverImage: "../../assets/posts/portfolioMockup.png"
 publishedAt: "2026-05-29"
-tags: ["Blog", "DevOps", "Career", "Writing", "Portfolio"]
-relatedProjects: [5]
+topic: "Career"
+relatedProjects: [9]
 links:
   - label: "My LinkedIn"
     url: "https://www.linkedin.com/in/chief-daniel"

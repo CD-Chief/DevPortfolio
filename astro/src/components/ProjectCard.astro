@@ -1,102 +1,67 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import Tag from './Tag.astro';
+import TagList from './TagList.astro';
+import type { TechName } from '../data/tech';
 
 interface Props {
   name: string;
-  size: 'S' | 'M' | 'L';
   image?: ImageMetadata;
-  technologies: string[];
+  technologies: TechName[];
   description: string;
   showMoreButton?: boolean;
   link?: string;
   projectId?: number;
+  year?: string;
+  // Smaller card without a screenshot, used for the "Earlier work" section
+  compact?: boolean;
 }
 
-const { name, size, image, technologies, description, showMoreButton = false, link = '#', projectId } = Astro.props;
-
-// Size letter colors (lighter shades)
-const sizeColors = {
-  S: 'text-green-200',
-  M: 'text-yellow-200',
-  L: 'text-red-200'
-};
-
+const { name, image, technologies, description, showMoreButton = false, link = '#', projectId, year, compact = false } = Astro.props;
+const hasLink = link && link !== '#';
 ---
 
-<div class="bg-white shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200 w-full">
-  <!-- Header with title and size letter -->
-  <div class="flex items-center justify-between p-4">
-    <h3 class="text-xl font-Display1 text-Neutral-Dark flex-1 text-center">{name}</h3>
-    <span class={`text-2xl font-bold ${sizeColors[size]}`}>
-      {size}
-    </span>
-  </div>
-
-  <!-- Main content: Image and Info columns -->
-  <div class={`grid gap-6 p-6 ${image ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
-    <!-- Left column: Image (conditional) -->
-    {image && ( 
-      <div class="flex items-center justify-center">
-        <Image 
-          src={image} 
-          alt={name}
-          width={300}
-          height={192}
-          class="w-full h-48 object-contain"
-          loading="lazy"
-        />
-      </div>
-    )}
-
-    <!-- Right column (or center if no image): Technologies and Description -->
-    <div class={`flex flex-col gap-4 ${!image ? 'items-center text-center' : ''}`}>
-      <!-- Technologies -->
-      <div>
-        <h4 class="text-sm font-semibold text-gray-600 mb-2">Technologies</h4>
-        <div class="flex flex-wrap gap-2 justify-center">
-          {technologies.map((tech) => (
-            <Tag label={tech} />
-          ))}
-        </div>
-      </div>
-
-      <!-- Description -->
-      <div>
-        <h4 class="text-sm font-semibold text-gray-600 mb-2">Description</h4>
-        <p class="text-sm text-gray-700 leading-relaxed">
-          {description}
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Project Link (if not #) -->
-  {link && link !== '#' && (
-    <div class="px-6 pb-3 flex justify-center">
-      <a 
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-Primary1 hover:text-Primary2 font-Display2 text-sm underline transition-colors"
-      >
-        View Live Project
-      </a>
+<article class="card card-hover group flex h-full flex-col overflow-hidden">
+  {image && !compact && (
+    <div class="aspect-[16/10] overflow-hidden border-b border-line bg-panel-raised p-3">
+      <Image
+        src={image}
+        alt={`Screenshot of ${name}`}
+        width={640}
+        height={400}
+        class="h-full w-full rounded-lg object-contain transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
+        loading="lazy"
+      />
     </div>
   )}
 
-  <!-- See More button (conditional) - Neubrutalist style -->
-  {showMoreButton && projectId && (
-    <div class="px-6 pb-6 flex justify-center">
-      <button 
-        type="button"
-        data-project-id={projectId}
-        data-project-title={name}
-        class="project-modal-trigger inline-block text-Neutral-Dark font-medium text-sm px-4 py-2 relative transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(26,25,49,1)] cursor-pointer border-2 border-Neutral-Dark bg-white"
-      >
-        See More →
-      </button>
-    </div>
-  )}
-</div>
+  <div class:list={['flex flex-1 flex-col', compact ? 'gap-3 p-5' : 'gap-4 p-6']}>
+    {year && <p class="font-Mono text-xs text-ink-muted">{year}</p>}
+    <h3 class:list={['font-semibold text-ink', compact ? 'text-lg' : 'text-xl']}>{name}</h3>
+    <p class="text-sm leading-relaxed text-ink-muted">{description}</p>
+
+    <TagList tags={technologies} max={compact ? 3 : 4} class="mt-auto pt-2" />
+
+    {(showMoreButton && projectId) || hasLink ? (
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        {showMoreButton && projectId && (
+          <button
+            type="button"
+            data-project-id={projectId}
+            data-project-title={name}
+            data-umami-event="project-open"
+            data-umami-event-item={name}
+            class="project-modal-trigger btn btn-ghost btn-sm"
+          >
+            Read more
+          </button>
+        )}
+        {hasLink && (
+          <a href={link} target="_blank" rel="noopener noreferrer" class="link-arrow" data-umami-event="project-link" data-umami-event-item={name}>
+            View live ↗
+          </a>
+        )}
+      </div>
+    ) : null}
+  </div>
+</article>

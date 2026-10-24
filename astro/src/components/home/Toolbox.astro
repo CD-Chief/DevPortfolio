@@ -1,0 +1,143 @@
+---
+// Placeholder DevOps line-up; swap entries here once the final set is chosen
+const tools = [
+	{ name: 'Docker', icon: 'docker' },
+	{ name: 'Linux', icon: 'linux' },
+	{ name: 'GitHub Actions', icon: 'githubactions' },
+	{ name: 'Traefik', icon: 'traefikproxy' },
+	{ name: 'Grafana', icon: 'grafana' },
+	{ name: 'Prometheus', icon: 'prometheus' },
+	{ name: 'Kubernetes', icon: 'kubernetes' },
+	{ name: 'Terraform', icon: 'terraform' },
+	{ name: 'Nginx', icon: 'nginx' },
+	{ name: 'Git', icon: 'git' },
+];
+
+const SLOTS = 6;
+const visible = tools.slice(0, SLOTS);
+---
+
+<div class="toolbox" data-tools={JSON.stringify(tools)}>
+	<p class="toolbox-label">Toolbox</p>
+	<ul class="slots">
+		{visible.map((tool) => (
+			<li class="slot">
+				<span class="logo" style={`--icon: url(/skills/devops/${tool.icon}.svg)`} aria-hidden="true"></span>
+				<span class="name">{tool.name}</span>
+			</li>
+		))}
+	</ul>
+</div>
+
+<script>
+	const box = document.querySelector<HTMLElement>('.toolbox');
+	const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (box && !reduced) {
+		const tools: { name: string; icon: string }[] = JSON.parse(box.dataset.tools ?? '[]');
+		const slots = Array.from(box.querySelectorAll<HTMLElement>('.slot'));
+		const shown = tools.slice(0, slots.length);
+		// Tools not currently on screen, in the order they will come in
+		const queue = tools.slice(slots.length);
+		let lastSlot = -1;
+
+		setInterval(() => {
+			if (document.hidden || !queue.length) return;
+			let i = Math.floor(Math.random() * slots.length);
+			if (i === lastSlot) i = (i + 1) % slots.length;
+			lastSlot = i;
+
+			const slot = slots[i];
+			slot.classList.add('out');
+			setTimeout(() => {
+				const next = queue.shift()!;
+				queue.push(shown[i]);
+				shown[i] = next;
+				slot.querySelector<HTMLElement>('.logo')!.style.setProperty('--icon', `url(/skills/devops/${next.icon}.svg)`);
+				slot.querySelector<HTMLElement>('.name')!.textContent = next.name;
+				slot.classList.remove('out');
+			}, 450);
+		}, 2200);
+	}
+</script>
+
+<style>
+	.toolbox {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.toolbox-label {
+		margin: 0;
+		font: 500 12px/1 var(--font-Mono);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	.slots {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.slot {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		height: 84px;
+		padding: 10px 6px;
+		border-radius: 14px;
+		background: color-mix(in srgb, var(--color-panel) 70%, transparent);
+		border: 1px solid var(--color-line);
+		transition: opacity 450ms ease, transform 450ms ease;
+	}
+
+	.slot.out {
+		opacity: 0;
+		transform: scale(0.92);
+	}
+
+	.logo {
+		width: 30px;
+		height: 30px;
+		background: var(--color-ink);
+		-webkit-mask: var(--icon) center / contain no-repeat;
+		mask: var(--icon) center / contain no-repeat;
+	}
+
+	.slot:nth-child(odd) .logo {
+		background: var(--color-accent);
+	}
+
+	.name {
+		font: 500 11px/1.2 var(--font-Mono);
+		color: var(--color-ink-muted);
+		text-align: center;
+	}
+
+	@media (min-width: 640px) and (max-width: 1023px) {
+		.slots {
+			grid-template-columns: repeat(6, 1fr);
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.slot {
+			height: auto;
+			aspect-ratio: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.slot {
+			transition: none;
+		}
+	}
+</style>

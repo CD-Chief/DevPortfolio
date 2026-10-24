@@ -3,7 +3,7 @@ id: 6
 title: "AI Hunter (Hackathon Project)"
 size: "M"
 tech: ["Python", "PyTorch", "Pygame"]
-summary: "A hackathon game prototype where an AI-controlled hunter adapts to the player's movement patterns and chases them in real time."
+summary: "Built at one of my first hackathons: a game prototype where an AI-controlled hunter adapts to the player's movement patterns and chases them in real time."
 link: "#"
 image: "../../assets/projects/aihunter1.png"
 showMoreButton: true

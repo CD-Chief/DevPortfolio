@@ -2,11 +2,12 @@
 id: 1
 title: "Photography Portfolio Website"
 size: "L"
-tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity (Headless CMS)", "Figma"]
+tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity", "Figma"]
 summary: "A multilingual, client-ready photography portfolio with a headless CMS, accessibility-conscious contact flow, and a wireframe-driven design process."
 link: "http://ibejiphotography.com"
 image: "../../assets/projects/IbejiGallery.png"
 showMoreButton: true
+featured: 2
 ---
 
 # Photography Portfolio Website

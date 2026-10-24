@@ -14,6 +14,8 @@ This portfolio showcases my projects, technical skills, and development journey.
 - **Content Collections**: Type-safe project data with schema validation
 - **Optimized Images**: Automatic WebP generation and lazy loading via `astro:assets`
 - **Responsive Design**: Mobile-first approach with fluid typography and layouts
+- **Analytics**: Cookieless self-hosted Umami with a few click events
+- **Live Server Stats**: CPU, memory, load and per-container stats from Beszel in the hero
 - **Interactive Elements**: Project modals, filtering, and smooth animations
 - **Performance-First**: Optimized LCP, CLS, and TBT scores
 - **Self-Hosted**: Running on an IONOS VPS
@@ -111,8 +113,12 @@ summary: "Project description"
 
 1. Add project images to `src/assets/projects/`
 2. Create a new markdown file in `src/content/projects/`
-3. Follow the schema defined in `src/content/config.ts`
-4. The project will automatically appear on the site
+3. Follow the schema in [`src/content.config.ts`](astro/src/content.config.ts). Technology names must come from [`src/data/tech.ts`](astro/src/data/tech.ts), and a misspelt one fails the build
+4. Optional fields control where it appears:
+   - `featured: 1` to `4` puts it on the homepage, in that order (lowest first, only the first four are shown)
+   - `year: "2025"` shows a year on the card; leave it off when unsure
+   - `archived: true` moves it to the "Earlier work" section at the bottom of `/projects`
+5. Projects with none of these still appear on `/projects`
 
 ### Updating Skills
 
@@ -121,13 +127,65 @@ Edit `src/data/skills.json` to add or modify skill entries.
 
 ## 📊 Live System Stats
 
-The site includes a live stats modal (the server icon on the homepage) that shows metrics from the server running the container:
-- CPU usage
-- RAM usage
-- System load averages
-- Uptime
+The homepage hero shows live stats from the VPS running the site: CPU and load average (1m, 5m, 15m) as 24h charts, a memory ring, the top containers by memory, network rate and 24h traffic, uptime, and container health.
 
-The data comes from `GET /api/server-stats.json`, which runs on every request and caches results for 5 seconds. Values reflect the host kernel, so inside a container they show the host's numbers.
+Container names are never sent as-is. [`src/data/containers.ts`](astro/src/data/containers.ts) maps container names or images to display labels (e.g. everything Prometheus/Grafana becomes "Monitoring"); anything not listed there is folded into "Other", so client or personal projects stay private.
+
+The data comes from [Beszel](https://beszel.dev). The browser only ever calls `GET /api/stats.json` on this site; that route logs in to the Beszel hub server-side, reads the system's latest stats and 24h history, and returns only a whitelisted set of fields. The hub URL and credentials never reach the browser.
+
+- Results are cached in memory for 45 seconds, and concurrent requests share one hub call
+- If the hub fails, the last good reading is served and marked stale (the "LIVE" label turns grey)
+- With no reading at all, the route returns `503` and the homepage hides the widgets
+- Under `astro dev` with no hub configured, the route serves mock data so the layout can be worked on
+
+### Configuration
+
+Set these environment variables (in Coolify for production). They are read at runtime via `astro:env`, so they are not baked into the build or the image.
+
+| Variable | Description |
+| --- | --- |
+| `BESZEL_URL` | Hub URL, e.g. `https://beszel.example.com` |
+| `BESZEL_EMAIL` | Login of a dedicated Beszel user |
+| `BESZEL_PASSWORD` | That user's password |
+| `BESZEL_SYSTEM` | System name exactly as shown in Beszel |
+
+Create the user in Beszel with the **readonly** role and assign it only to this system. Beszel's access rules then let it read `systems`, `system_stats` and `containers` for that system and nothing else, with no write access.
+
+See [`.env.example`](.env.example). Copy it to `.env` for `docker compose`, or to `astro/.env` for `astro dev`. Both are git-ignored; never commit real values.
+
+## 🔎 SEO
+
+- **Sitemap:** `@astrojs/sitemap` writes `sitemap-index.xml` at build time from the prerendered pages (API routes excluded). URLs have no trailing slash, matching the canonical tags. `public/robots.txt` points to it and disallows `/api/`.
+- **Head tags:** [`Layout.astro`](astro/src/layouts/Layout.astro) sets a per-page title, description, canonical URL, Open Graph and Twitter tags, and favicons from `public/`. The site URL comes from `site` in `astro.config.mjs`.
+- **Structured data:** the homepage emits `WebSite` and `Person` JSON-LD, and each post emits `BlogPosting`. Pass a `jsonLd` prop to the layout to add more.
+- **Preview image:** `public/og-image.png` (1200x630) is used for link previews. It is a screenshot of a small HTML page in the site's style, so regenerate it if the headline changes.
+- **404 page:** `src/pages/404.astro`, marked `noindex`.
+
+## 📈 Analytics
+
+The site uses a self-hosted, cookieless [Umami](https://umami.is) instance at `analytics.chiefosei.dev`. Page views are tracked automatically; a small set of click events is added with data attributes.
+
+- **Config:** the script URL and website ID are public, so they live in [`src/data/analytics.ts`](astro/src/data/analytics.ts). The script tag is rendered in [`Layout.astro`](astro/src/layouts/Layout.astro).
+- **Production only:** the script is left out of `astro dev`, and the tag carries `data-domains` set to the hostname of `site` in `astro.config.mjs`. The tracker ignores every other hostname, so staging, previews and localhost are never counted. Pages are prerendered, so a runtime environment flag would be frozen at build time; the domain allowlist is what enforces this in the browser.
+- **No JavaScript needed:** events are `data-umami-event` attributes on the clickable element. They do nothing when the script is absent.
+
+### Events
+
+| Event | Fires when | Properties | Where |
+|-------|------------|------------|-------|
+| `cta-click` | "See my projects" is clicked | `place`: `hero-projects` | `Hero.astro` |
+| `contact-click` | A contact link is clicked | `channel`: `email`, `linkedin`, `github`; `place`: `header`, `hero`, `footer` | `SiteHeader.astro`, `Hero.astro`, `Socials.astro` |
+| `project-open` | "Read more" on a project card is clicked | `item`: project title | `ProjectCard.astro` |
+| `project-link` | "View live" on a project card is clicked | `item`: project title | `ProjectCard.astro` |
+
+### Adding an event
+
+1. Put `data-umami-event="event-name"` on the clickable element, plus optional `data-umami-event-<key>="value"` properties.
+2. Name events short and kebab-case, noun-verb style. Use one event name with properties instead of one name per button (`cta-click` with `place`, not `cta-click-header`).
+3. Keep property values to a small fixed set, and never put personal data in them (no names, emails or free text).
+4. Update the table above.
+
+To check events, open Umami and use Realtime for visits and the Events tab for custom events and their property breakdowns. Test from the real domain, since the domains attribute blocks other hosts.
 
 ## 🚀 CI/CD
 
@@ -139,7 +197,7 @@ Runs on pull requests to `main` and `dev`:
 1. Installs dependencies, then builds the Astro site (fails fast before Docker)
 2. Builds the Docker image from the `Dockerfile`
 3. Starts the container and waits for `/api/health` to return 200
-4. Checks `/`, `/projects`, `/api/health`, and `/api/server-stats.json` return 200
+4. Checks `/`, `/projects`, `/blog` and `/api/health` return 200, and `/api/stats.json` returns 200 or 503 (503 is expected with no Beszel credentials)
 5. Prints container logs on failure, then removes the container
 
 Lint and test steps are commented out until those scripts exist.
@@ -149,19 +207,31 @@ Lint and test steps are commented out until those scripts exist.
 Runs on pushes to `main` and `dev`, and can be started manually from the Actions tab:
 1. Builds the production image and pushes it to GHCR
 2. Tags each image with the branch name (`main` or `dev`, a moving tag) and with the branch plus short commit SHA (`main-<sha>`, one per commit)
-3. Calls the Coolify deploy API (`POST /api/v1/deploy`) to redeploy the resource for that branch
+3. Calls the Coolify deploy API (`POST /api/v1/deploy?tag=...`) to redeploy every Coolify app carrying the matching tag
 
 Concurrent runs on the same branch cancel the older run.
+
+**Deploy by tag.** The workflow never stores Coolify resource IDs. It derives a tag from the repo name (lowercased) and the branch, and Coolify deploys every app that carries that tag:
+
+| Branch | Tag |
+|--------|-----|
+| `main` | `devportfolio-production` |
+| `dev` | `devportfolio-staging` |
+
+Assign the same string to the matching app in Coolify (Configuration, Tags). A typo means the deploy hits nothing. Keep tags unique per site.
+
+The workflow logs the expected tag on every run, then the HTTP status and response body of the deploy call, and fails on any non-2xx response. The deploy step skips itself (with a warning) until both secrets below exist, so a first push only builds the image.
 
 **Required repository secrets:**
 
 | Secret | Purpose |
 |--------|---------|
-| `COOLIFY_TOKEN` | Coolify API token, sent as a Bearer token |
-| `COOLIFY_UUID_MAIN` | Coolify resource UUID for the `main` deployment |
-| `COOLIFY_UUID_DEV` | Coolify resource UUID for the `dev` deployment |
+| `COOLIFY_URL` | Coolify address, e.g. `https://server.chiefosei.dev` |
+| `COOLIFY_TOKEN` | Coolify API token with the deploy permission only |
 
-`GITHUB_TOKEN` handles GHCR login and needs no setup. The Coolify address is set as `COOLIFY_URL` in the `env` block at the top of `build-and-push.yml`, since it isn't sensitive.
+`GITHUB_TOKEN` handles GHCR login and needs no setup. There are no build-time variables: the Beszel settings are runtime env vars on each Coolify app, so one image serves both environments.
+
+The old `COOLIFY_UUID_MAIN` and `COOLIFY_UUID_DEV` secrets are no longer used and can be deleted.
 
 ### Health Checks
 
@@ -180,8 +250,8 @@ Set `HOST=0.0.0.0` (already set in the `Dockerfile`) so the server accepts conne
 ## ↩️ Rollback
 
 Rollback is manual:
-1. Find the last known-good image tag in GHCR, e.g. `ghcr.io/cd-chief/dev-portfolio:main-<sha>`
-2. In Coolify, point the resource at that tag, or redeploy with that tag
+1. Find the last known-good SHA-tagged image in GHCR, e.g. `ghcr.io/cd-chief/dev-portfolio:main-<sha>` (the moving `main` tag is not a rollback target)
+2. In Coolify, point the app at that SHA tag and redeploy
 3. Check `/api/health` and the homepage
 4. Once stable, revert the bad commit or fix forward before the next normal deploy
 
