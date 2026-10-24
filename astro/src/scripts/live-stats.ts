@@ -45,7 +45,7 @@ function drawChart(el: HTMLElement, t: number[], series: Series[], max: number, 
 	}
 
 	const axis = el.querySelector<HTMLElement>('.axis-max');
-	if (axis) axis.textContent = `${+max.toFixed(2)}${unit.trim()}`;
+	if (axis) axis.textContent = `0–${+max.toFixed(2)}${unit.trim()}`;
 
 	const label = el.dataset.label ?? '';
 	const last = series.map((s) => s.values[n - 1]);
