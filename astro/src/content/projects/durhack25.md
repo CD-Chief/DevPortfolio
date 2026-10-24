@@ -7,6 +7,7 @@ summary: "A gaze-controlled remote camera system using face tracking, a Raspberr
 link: "#"
 image: "../../assets/projects/Durhack1.png"
 showMoreButton: true
+year: "2025"
 ---
 
 # Gaze-Guided Remote Camera (DurHackX 2025)

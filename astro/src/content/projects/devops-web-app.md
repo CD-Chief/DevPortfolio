@@ -7,6 +7,7 @@ summary: "A three-tier chat and dashboard system showcasing DevOps best practice
 link: "#"
 image: "../../assets/projects/DevOpsApp-Architecture.png"
 showMoreButton: true
+featured: 3
 ---
 
 # DevOps Web Application

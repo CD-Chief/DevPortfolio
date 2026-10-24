@@ -7,6 +7,7 @@ summary: "A hand-coded, single-page portfolio built with vanilla HTML, CSS, and 
 link: "#"
 image: "../../assets/projects/OldPort1.png"
 showMoreButton: true
+archived: true
 ---
 
 # First Portfolio Website

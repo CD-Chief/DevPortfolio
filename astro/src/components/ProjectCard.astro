@@ -12,14 +12,17 @@ interface Props {
   showMoreButton?: boolean;
   link?: string;
   projectId?: number;
+  year?: string;
+  // Smaller card without a screenshot, used for the "Earlier work" section
+  compact?: boolean;
 }
 
-const { name, image, technologies, description, showMoreButton = false, link = '#', projectId } = Astro.props;
+const { name, image, technologies, description, showMoreButton = false, link = '#', projectId, year, compact = false } = Astro.props;
 const hasLink = link && link !== '#';
 ---
 
 <article class="card card-hover group flex h-full flex-col overflow-hidden">
-  {image && (
+  {image && !compact && (
     <div class="aspect-[16/10] overflow-hidden border-b border-line bg-panel-raised p-3">
       <Image
         src={image}
@@ -32,11 +35,12 @@ const hasLink = link && link !== '#';
     </div>
   )}
 
-  <div class="flex flex-1 flex-col gap-4 p-6">
-    <h3 class="text-xl font-semibold text-ink">{name}</h3>
+  <div class:list={['flex flex-1 flex-col', compact ? 'gap-3 p-5' : 'gap-4 p-6']}>
+    {year && <p class="font-Mono text-xs text-ink-muted">{year}</p>}
+    <h3 class:list={['font-semibold text-ink', compact ? 'text-lg' : 'text-xl']}>{name}</h3>
     <p class="text-sm leading-relaxed text-ink-muted">{description}</p>
 
-    <TagList tags={technologies} max={4} class="mt-auto pt-2" />
+    <TagList tags={technologies} max={compact ? 3 : 4} class="mt-auto pt-2" />
 
     {(showMoreButton && projectId) || hasLink ? (
       <div class="flex flex-wrap items-center gap-4 pt-2">

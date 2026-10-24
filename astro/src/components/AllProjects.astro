@@ -7,8 +7,13 @@ import SectionHeader from './SectionHeader.astro';
 // Get all projects from content collection
 const allProjects = await getCollection('projects');
 
-// Sort by id
-const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
+// Featured projects first in rank order, then the rest by id
+const rank = (p: (typeof allProjects)[number]) => p.data.featured ?? Infinity;
+const byRankThenId = (a: (typeof allProjects)[number], b: (typeof allProjects)[number]) =>
+	rank(a) === rank(b) ? a.data.id - b.data.id : rank(a) - rank(b);
+
+const projects = allProjects.filter((p) => !p.data.archived).sort(byRankThenId);
+const earlier = allProjects.filter((p) => p.data.archived).sort((a, b) => a.data.id - b.data.id);
 ---
 
 <section class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-8">
@@ -35,10 +40,37 @@ const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
 					showMoreButton={project.data.showMoreButton}
 					link={project.data.link}
 					projectId={project.data.id}
+					year={project.data.year}
 				/>
 			</div>
 		))}
 	</div>
+
+	{earlier.length > 0 && (
+		<section id="earlierWork" class="mt-20" aria-labelledby="earlierWorkTitle">
+			<div class="mb-8 flex flex-col gap-2">
+				<h2 id="earlierWorkTitle" class="eyebrow">Earlier work</h2>
+				<p class="max-w-2xl text-sm text-ink-muted">Where I started. Kept to show the progression, not as current work.</p>
+			</div>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+				{earlier.map((project) => (
+					<div class="project-card" data-technologies={project.data.tech.join(', ')}>
+						<ProjectCard
+							compact
+							name={project.data.title}
+							technologies={project.data.tech}
+							description={project.data.summary}
+							showMoreButton={project.data.showMoreButton}
+							link={project.data.link}
+							projectId={project.data.id}
+							year={project.data.year}
+						/>
+					</div>
+				))}
+			</div>
+		</section>
+	)}
+
 	<p id="projectsEmpty" class="hidden py-12 text-center text-ink-muted">No projects use that yet.</p>
 </section>
 
@@ -47,12 +79,11 @@ const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
 
 <script>
 	const filterInput = document.getElementById('techFilter') as HTMLInputElement;
-	const projectsGrid = document.getElementById('projectsGrid');
 
-	if (filterInput && projectsGrid) {
+	if (filterInput) {
 		filterInput.addEventListener('input', (e) => {
 			const filterValue = (e.target as HTMLInputElement).value.toLowerCase().trim();
-			const projectCards = projectsGrid.querySelectorAll('[data-technologies]');
+			const projectCards = document.querySelectorAll('.project-card');
 
 			let shown = 0;
 			projectCards.forEach((card) => {
@@ -61,6 +92,14 @@ const projects = allProjects.sort((a, b) => a.data.id - b.data.id);
 				card.classList.toggle('hidden', !match);
 				if (match) shown++;
 			});
+
+			// Hide the "Earlier work" heading when none of its cards match
+			const earlierSection = document.getElementById('earlierWork');
+			if (earlierSection) {
+				const anyVisible = earlierSection.querySelector('.project-card:not(.hidden)') !== null;
+				earlierSection.classList.toggle('hidden', !anyVisible);
+			}
+
 			document.getElementById('projectsEmpty')?.classList.toggle('hidden', shown > 0);
 		});
 	}

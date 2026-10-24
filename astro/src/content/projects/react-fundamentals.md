@@ -7,6 +7,7 @@ summary: "A pair of React projects used to learn state management, component str
 link: "#"
 image: "../../assets/projects/Expense-Tracker.png"
 showMoreButton: true
+archived: true
 ---
 
 # React Fundamentals: Counter & Expense Tracker
