@@ -17,6 +17,8 @@ export const TECH = {
 	Grafana: 'infra',
 	Prometheus: 'infra',
 	Proxmox: 'infra',
+	Beszel: 'infra',
+	Umami: 'infra',
 
 	// Languages, frameworks and everything else
 	Python: 'general',
