@@ -2,37 +2,44 @@
 id: 1
 title: "Photography Portfolio Website"
 size: "L"
-tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity", "Figma"]
-summary: "A multilingual, client-ready photography portfolio with a headless CMS, accessibility-conscious contact flow, and a wireframe-driven design process."
-link: "http://ibejiphotography.com"
-image: "../../assets/projects/IbejiGallery.png"
+tech: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity", "Docker", "GitHub Actions", "GHCR", "Coolify", "Traefik", "Figma"]
+summary: "A multilingual photography portfolio for a client, run on my own VPS: image built in CI, staging and production environments, automatic TLS and monitoring, with the Sanity CMS hosted separately."
+link: "https://ibejiphotography.com"
+image: "../../assets/projects/IbejinewSite.png"
 showMoreButton: true
 featured: 2
 ---
 
 # Photography Portfolio Website
 
-A production-ready photography portfolio site for a solo photographer, built with Next.js (App Router), TypeScript, Tailwind CSS, and a headless Sanity CMS backend.
+A production site for a solo photographer, built with Next.js (App Router), TypeScript and Tailwind CSS, with a headless Sanity CMS for the blog and gallery. The client edits content on their own; I run everything underneath it.
 
-## Collaboration & Requirements
+## Infrastructure
 
-We started with multiple requirements meetings to clarify the client’s goals, audience, and priorities (showcasing work, telling their story, and generating enquiries). For each main page: home, gallery, about, blog, and contact. I created Figma wireframes, iterated on them with the client, and only then moved into implementation so that layout, messaging, and content structure were agreed upfront.
+The site runs on my own VPS, managed with Coolify, using the same delivery pipeline as this portfolio.
 
-## Design & UX
+- **Build in CI, not on the server:** GitHub Actions builds the Docker image and pushes it to GHCR. The VPS only pulls a finished image, so a deploy never competes with the other sites on the box for CPU.
+- **Staging and production:** the `dev` branch deploys to a staging environment and `main` deploys to production. Changes get checked on staging before the client sees them.
+- **Rollbacks:** every image is tagged with the commit it came from, so going back to the previous version means redeploying an earlier tag.
+- **Reverse proxy and TLS:** Traefik routes traffic to the container and handles certificates automatically.
+- **Separate CMS:** Sanity is hosted separately from the site container, so the content system and the website can be changed and restarted independently.
+- **Monitoring:** the server and the site are monitored, so I find out about a problem before the client does.
 
-The design focuses on keeping the photography central, using generous whitespace, restrained colour, and typography that matches the client’s “elegant but approachable” brief. Each wireframe was translated into a responsive layout, with attention to how the experience scales from desktop to mobile while keeping navigation simple and predictable.
+## Application
 
-## Technical Implementation
+The front end uses Next.js with locale-aware routing and translation helpers for multilingual content. Sanity exposes the blog and gallery through its content API, so the client can update text and images without touching code.
 
-The front end uses Next.js (App Router) with locale-aware routing and translation helpers for multilingual content. A headless Sanity CMS instance powers the blog and gallery, exposing content via its content API so the client can update text and images without touching code. The contact form is wired to a backend handler with spam protection (reCAPTCHA, honeypot, and rate limiting) and email delivery, designed to align with GDPR expectations.
+The contact form posts to a backend handler with reCAPTCHA, a honeypot field and rate limiting, then sends the enquiry by email. It is built with GDPR expectations in mind.
 
-## Performance & Refinements
+High-resolution photos go through Next.js image optimisation with remote patterns and several quality presets. Animations stick to transform and opacity so scrolling stays smooth.
 
-High-resolution imagery is handled with Next.js image optimisation, remote patterns, and multiple quality presets to keep the site fast while still showcasing detailed photography. Several images were resized and compressed, and animations were kept lightweight (transform/opacity) to avoid jank while scrolling.
+## Process
+
+I ran requirements meetings with the client first, then made Figma wireframes for the home, gallery, about, blog and contact pages and iterated on them together before writing any code. The design keeps the photography central, with generous whitespace, restrained colour and typography that fits the client's "elegant but approachable" brief.
 
 ## What I Learned
 
-This project strengthened experience in running a full client process end to end: gathering requirements, turning them into wireframes, validating designs, and then delivering a multilingual, CMS-backed site. It also deepened understanding of performance trade-offs when working with large image assets and of how to keep the implementation faithful to a design system across multiple page types.
+Running a client site is different from building one. Moving builds into CI, keeping a staging environment and being able to roll back made updates routine, and it meant I could look after the site without worrying about each deploy. Handling large image assets also taught me where the performance trade-offs sit.
 
 ## Visuals
 
@@ -50,4 +57,4 @@ This project strengthened experience in running a full client process end to end
 
 ## Links
 
-- Live site: [ibejiphotography.com](http://ibejiphotography.com)
+- Live site: [ibejiphotography.com](https://ibejiphotography.com)
