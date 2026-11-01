@@ -379,6 +379,15 @@ import Socials from './Socials.astro';
 		gap: 16px;
 	}
 
+	/* Below the 4-column layout the tile is only half the viewport wide: let the numbers drop under the ring instead of spilling out */
+	@media (max-width: 1023px) {
+		.mem-ring-wrap {
+			flex-wrap: wrap;
+			align-content: center;
+			gap: 12px 16px;
+		}
+	}
+
 	.mem-ring {
 		width: 92px;
 		height: 92px;
